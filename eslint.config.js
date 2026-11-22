@@ -2,6 +2,7 @@
 import js from '@eslint/js';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import prettier from 'eslint-config-prettier';
+import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -24,6 +25,16 @@ export default defineConfig(
       eqeqeq: ['error', 'always', { null: 'ignore' }],
       'no-console': ['warn', { allow: ['warn', 'error'] }],
     },
+  },
+  {
+    files: ['apps/web/**/*.{ts,tsx}'],
+    languageOptions: {
+      globals: { ...globals.browser },
+    },
+  },
+  {
+    files: ['**/*.tsx'],
+    extends: [reactHooks.configs.flat.recommended],
   },
   // Must stay last: turns off rules that conflict with Prettier.
   prettier,

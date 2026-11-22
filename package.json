@@ -15,6 +15,7 @@
   },
   "scripts": {
     "dev:server": "npm run dev -w @vigortally/server",
+    "dev:web": "npm run dev -w @vigortally/web",
     "build": "npm run build --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "eslint .",
@@ -29,10 +30,15 @@
     "@types/node": "^22.20.5",
     "eslint": "^10.15.0",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.14.0",
     "prettier": "^3.10.1",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.73.0",
     "vitest": "^5.1.1"
+  },
+  "overrides": {
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
   }
 }

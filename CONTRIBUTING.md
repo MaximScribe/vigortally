@@ -66,4 +66,16 @@ docs/         documentation
 
 Requirements: Node.js 22 or newer, npm 10 or newer, Docker (for PostgreSQL).
 
-Setup instructions will be added as the apps are created.
+```bash
+npm install           # installs every workspace
+
+npm run dev:server    # API on http://localhost:8080
+npm run dev:web       # web app on http://localhost:5173 (proxies /api to the server)
+
+npm test              # all tests (Vitest, every workspace)
+npm run typecheck     # TypeScript in every workspace
+npm run lint          # ESLint
+npm run format        # Prettier
+```
+
+Before committing, `npm test`, `npm run typecheck`, `npm run lint` and `npm run format:check` should all pass.
