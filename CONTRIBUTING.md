@@ -14,12 +14,12 @@ main ──●────────────●─────────
 - **`main`** is always in a working state. Nobody commits to it directly; it only receives merges.
 - **Short-lived branches** are created from `main`, one per coherent piece of work:
 
-  | Prefix | Use for | Example |
-  |---|---|---|
-  | `feat/` | new functionality | `feat/web-shell` |
-  | `fix/` | bug fixes | `fix/sync-cursor` |
-  | `chore/` | tooling, config, dependencies | `chore/monorepo` |
-  | `docs/` | documentation only | `docs/self-hosting` |
+  | Prefix      | Use for                                | Example                    |
+  | ----------- | -------------------------------------- | -------------------------- |
+  | `feat/`     | new functionality                      | `feat/web-shell`           |
+  | `fix/`      | bug fixes                              | `fix/sync-cursor`          |
+  | `chore/`    | tooling, config, dependencies          | `chore/monorepo`           |
+  | `docs/`     | documentation only                     | `docs/self-hosting`        |
   | `refactor/` | restructuring without behaviour change | `refactor/metric-registry` |
 
 - Branches are merged with `git merge --no-ff`, so the history keeps every feature branch visible, and then deleted.
