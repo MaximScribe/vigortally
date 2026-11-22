@@ -1,0 +1,78 @@
+/* Global base styles. All values come from the --vt-* tokens (packages/ui). */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--vt-color-background);
+  color: var(--vt-color-text);
+  font-family: var(--vt-font-family);
+  font-size: var(--vt-text-body-size);
+  line-height: var(--vt-text-body-line-height);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--vt-color-accent);
+  outline-offset: 2px;
+}
+
+/* ---- text styles ---------------------------------------------------------- */
+
+.vt-display {
+  margin: 0;
+  font-size: var(--vt-text-display-size);
+  line-height: var(--vt-text-display-line-height);
+  font-weight: var(--vt-text-display-weight);
+}
+
+.vt-title {
+  margin: 0;
+  font-size: var(--vt-text-title-size);
+  line-height: var(--vt-text-title-line-height);
+  font-weight: var(--vt-text-title-weight);
+}
+
+.vt-label {
+  margin: 0;
+  color: var(--vt-color-text-subtle);
+  font-size: var(--vt-text-label-size);
+  line-height: var(--vt-text-label-line-height);
+  font-weight: var(--vt-text-label-weight);
+  letter-spacing: var(--vt-text-label-letter-spacing);
+  text-transform: var(--vt-text-label-transform);
+}
+
+.vt-muted {
+  color: var(--vt-color-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
