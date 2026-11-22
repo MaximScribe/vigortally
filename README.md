@@ -62,17 +62,20 @@ Tapping your profile picture slides out a menu from the right. It covers the who
 ### 🥗 Nutrition
 
 **Today**
+
 - Macro ring: a pie/donut chart of protein, carbs and fat compared with your targets
 - Calories eaten, left and burned, plus fiber, sugar, sodium and micronutrients on demand
 - Targets that can change by day type (training or rest day)
 
 **Log**
+
 - Scan a barcode with the camera (backed by [Open Food Facts](https://world.openfoodfacts.org/)), search the food database, or add a food by hand
 - Quick-add calories and macros, and copy a meal or a whole day
 - Track water with one tap
 - **Weigh-ins**: body weight with a smoothed trend line, right next to your intake
 
 **🍳 Kitchen** (a pull-down panel inside Nutrition)
+
 - **Today's meal**: what's scheduled to cook today, with the recipe a tap away
 - **Recipe book**: your recipes, imported from a URL (schema.org) or written by hand, with scaling, tags and nutrition per serving worked out automatically
 - **Recipe scheduler**: put recipes on days, or set up a repeating rotation or meal-prep cycle (for example "cook 4 portions of chili every Sunday")
@@ -101,14 +104,14 @@ An overview of every sport you do. Pick from **presets** (strength training, run
 
 **Integrations (planned)**
 
-| Source | Activities | How |
-|---|---|---|
-| Strava | Running, cycling, swimming, … | OAuth API |
-| Health Connect / Apple Health | Anything that other apps write there, such as Slopes ski days, watch workouts, steps and weight | Read by the companion app |
-| Slopes | Skiing / snowboarding | Through Apple Health / Health Connect, or by importing an export file |
-| theCrag | Climbing logbook | API (needs an API key) |
-| Kilter Board | Board climbing | To be researched (there is no official public API) |
-| GPX / FIT / CSV files | Anything | Upload |
+| Source                        | Activities                                                                                      | How                                                                   |
+| ----------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Strava                        | Running, cycling, swimming, …                                                                   | OAuth API                                                             |
+| Health Connect / Apple Health | Anything that other apps write there, such as Slopes ski days, watch workouts, steps and weight | Read by the companion app                                             |
+| Slopes                        | Skiing / snowboarding                                                                           | Through Apple Health / Health Connect, or by importing an export file |
+| theCrag                       | Climbing logbook                                                                                | API (needs an API key)                                                |
+| Kilter Board                  | Board climbing                                                                                  | To be researched (there is no official public API)                    |
+| GPX / FIT / CSV files         | Anything                                                                                        | Upload                                                                |
 
 ### 📊 Statistics
 
@@ -129,23 +132,23 @@ The look is **sleek, modern and minimal**. The app is dark first with a light th
 
 VigorTally runs in Docker on your homelab. It needs one VigorTally container and PostgreSQL. Images will be built for both `amd64` and `arm64`, so a Raspberry Pi works too.
 
-*Coming soon.* The goal is a setup like this:
+_Coming soon._ The goal is a setup like this:
 
 ```yaml
 services:
   vigortally:
     image: vigortally/vigortally:latest
-    ports: ["8080:8080"]
+    ports: ['8080:8080']
     environment:
       DATABASE_URL: postgres://vigortally:vigortally@db:5432/vigortally
       PUBLIC_URL: https://vigortally.your-tailnet.ts.net
-    volumes: ["./data:/data"]
+    volumes: ['./data:/data']
   db:
     image: postgres:17
     environment:
       POSTGRES_USER: vigortally
       POSTGRES_PASSWORD: vigortally
-    volumes: ["./pg:/var/lib/postgresql/data"]
+    volumes: ['./pg:/var/lib/postgresql/data']
 ```
 
 ### Reaching your server
@@ -165,6 +168,7 @@ You can also type in the server URL and log in by hand.
 The companion app is **offline first**. You can log a workout in a basement gym or a meal on a mountain, and it syncs once it can reach your server again.
 
 ### Privacy
+
 - Your data stays on your server, with no telemetry
 - Multiple users and households (recipes, schedules and shopping lists can be shared)
 - Optional single sign-on with OIDC (Authentik, Authelia, Keycloak and others)
@@ -187,13 +191,13 @@ The companion app is **offline first**. You can log a workout in a basement gym 
 
 TypeScript everywhere, in a single npm-workspaces monorepo:
 
-| Part | Technology |
-|---|---|
-| Server | Node.js, [Hono](https://hono.dev/), [Drizzle ORM](https://orm.drizzle.team/), PostgreSQL |
-| Web app | React, Vite, TanStack Router and Query |
-| Companion app | [Expo](https://expo.dev/) (React Native), SQLite for offline storage |
-| Shared | Zod schemas, domain logic and design tokens used by all three |
-| Tests | Vitest |
+| Part          | Technology                                                                               |
+| ------------- | ---------------------------------------------------------------------------------------- |
+| Server        | Node.js, [Hono](https://hono.dev/), [Drizzle ORM](https://orm.drizzle.team/), PostgreSQL |
+| Web app       | React, Vite, TanStack Router and Query                                                   |
+| Companion app | [Expo](https://expo.dev/) (React Native), SQLite for offline storage                     |
+| Shared        | Zod schemas, domain logic and design tokens used by all three                            |
+| Tests         | Vitest                                                                                   |
 
 ## Roadmap
 
@@ -214,6 +218,7 @@ The project is in early development. Ideas and feedback are welcome through issu
 VigorTally takes ideas from apps it admires: set-based workout loggers, calorie trackers, and [Mealie](https://github.com/mealie-recipes/mealie) for recipes, meal planning and shopping lists. VigorTally is an independent project and is not affiliated with any of them, or with any of the integration services named above.
 
 Planned data sources:
+
 - [Open Food Facts](https://world.openfoodfacts.org/): food and barcode data (ODbL)
 - [USDA FoodData Central](https://fdc.nal.usda.gov/): generic food nutrient data (public domain)
 - [wger](https://wger.de/): exercise data (CC-BY-SA)
