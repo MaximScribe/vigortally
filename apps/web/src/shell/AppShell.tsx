@@ -1,26 +1,36 @@
 import { Outlet } from '@tanstack/react-router';
-import { useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
+import { SideMenu } from './SideMenu';
 import { TabBar } from './TabBar';
 import { TopBar } from './TopBar';
 import './shell.css';
 
 /**
- * Frame around every page: top bar with the profile picture, the page itself, and the
- * tab navigation (bottom bar on phones, sidebar on wide screens; switched in CSS).
+ * Frame around every page: top bar with the profile picture, the page itself, the tab
+ * navigation (bottom bar on phones, sidebar on wide screens; switched in CSS) and the
+ * side menu.
  */
 export function AppShell() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const shellRef = useRef<HTMLDivElement>(null);
+
+  const closeMenu = useCallback(() => {
+    setMenuOpen(false);
+    // Give focus back to the profile button that opened the menu.
+    shellRef.current?.querySelector<HTMLButtonElement>('.vt-topbar .vt-avatar')?.focus();
+  }, []);
 
   return (
-    <div className="vt-shell">
+    <div className="vt-shell" ref={shellRef}>
       <TabBar variant="side" />
-      <div className="vt-shell__main">
+      <div className="vt-shell__main" inert={menuOpen}>
         <TopBar menuOpen={menuOpen} onOpenMenu={() => setMenuOpen(true)} />
         <main className="vt-shell__content">
           <Outlet />
         </main>
       </div>
       <TabBar variant="bottom" />
+      <SideMenu open={menuOpen} onClose={closeMenu} />
     </div>
   );
 }
