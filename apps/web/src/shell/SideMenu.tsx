@@ -3,6 +3,7 @@ import { ChevronRight, User, X } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useWindowSize } from '../hooks/useWindowSize';
 import { menuItems } from './menuItems';
+import { ThemeSwitch } from './ThemeSwitch';
 
 interface SideMenuProps {
   open: boolean;
@@ -59,6 +60,11 @@ export function SideMenu({ open, onClose }: SideMenuProps) {
             <X aria-hidden="true" size={22} />
           </button>
         </div>
+
+        <section className="vt-menu__section">
+          <h2 className="vt-label">Theme</h2>
+          <ThemeSwitch />
+        </section>
 
         <ul className="vt-menu__list">
           {menuItems.map(({ id, label, description, icon: Icon }) => (

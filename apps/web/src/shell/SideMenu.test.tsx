@@ -59,3 +59,21 @@ describe('side menu', () => {
     expect(dialog.style.width).toBe('390px');
   });
 });
+
+describe('theme switch', () => {
+  test('switches the theme from the side menu', async () => {
+    window.localStorage.clear();
+    const { user } = await openMenu();
+    const group = screen.getByRole('radiogroup', { name: 'Theme' });
+    expect(group).toBeVisible();
+    expect(screen.getByRole('radio', { name: 'System' })).toHaveAttribute('aria-checked', 'true');
+
+    await user.click(screen.getByRole('radio', { name: 'Light' }));
+    expect(screen.getByRole('radio', { name: 'Light' })).toHaveAttribute('aria-checked', 'true');
+    expect(document.documentElement.dataset.theme).toBe('light');
+    expect(window.localStorage.getItem('vigortally.theme')).toBe('light');
+
+    await user.click(screen.getByRole('radio', { name: 'System' }));
+    expect(document.documentElement.dataset.theme).toBeUndefined();
+  });
+});

@@ -303,3 +303,40 @@
     transform: translateX(100%);
   }
 }
+
+.vt-menu__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vt-space-sm);
+}
+
+/* ---- segmented control ---------------------------------------------------- */
+
+.vt-segmented {
+  display: flex;
+  padding: var(--vt-space-xs);
+  gap: var(--vt-space-xs);
+  background: var(--vt-color-surface);
+  border: 1px solid var(--vt-color-border);
+  border-radius: var(--vt-radius-md);
+}
+
+.vt-segmented__option {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--vt-space-xs);
+  min-height: 36px;
+  border: 0;
+  border-radius: var(--vt-radius-sm);
+  background: transparent;
+  color: var(--vt-color-text-muted);
+  font-size: var(--vt-text-body-small-size);
+  cursor: pointer;
+}
+
+.vt-segmented__option[aria-checked='true'] {
+  background: var(--vt-color-accent);
+  color: var(--vt-color-on-accent);
+}

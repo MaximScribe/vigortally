@@ -3,9 +3,10 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createAppRouter } from './router';
 import './styles/base.css';
-import { injectThemeTokens } from './theme';
+import { applyThemePreference, injectThemeTokens, loadThemePreference } from './theme';
 
 injectThemeTokens();
+applyThemePreference(loadThemePreference());
 
 const router = createAppRouter();
 
