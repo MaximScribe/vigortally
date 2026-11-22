@@ -6,11 +6,19 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
+    "dev": "tsx watch src/dev.ts",
+    "build": "node build.mjs",
+    "start": "node --enable-source-maps dist/main.js",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },
   "dependencies": {
+    "@hono/node-server": "^2.1.11",
     "hono": "^4.13.20",
     "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15"
   }
 }
