@@ -1,0 +1,32 @@
+.vt-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vt-space-xxl);
+  padding-top: var(--vt-space-xl);
+}
+
+.vt-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vt-space-md);
+}
+
+.vt-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--vt-min-touch-target);
+}
+
+.vt-card {
+  padding: var(--vt-space-xl);
+  background: var(--vt-color-surface);
+  border: 1px solid var(--vt-color-border);
+  border-radius: var(--vt-radius-lg);
+}
+
+.vt-empty__body {
+  margin: var(--vt-space-sm) 0 0;
+  font-size: var(--vt-text-body-small-size);
+  line-height: var(--vt-text-body-small-line-height);
+}
