@@ -1,0 +1,26 @@
+{
+  "name": "vigortally",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Self-hosted all-in-one fitness app: nutrition, recipes, activities and stats",
+  "license": "MIT",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=22",
+    "npm": ">=10"
+  },
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "^3.10.1",
+    "typescript": "~6.0.3"
+  }
+}
