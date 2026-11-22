@@ -57,7 +57,8 @@ packages/
   core/       pure domain logic (nutrition math, units, 1RM, scheduling)
   schema/     shared Zod schemas and API types
   ui/         design tokens shared by web and mobile
-docker/       Dockerfile and compose files
+Dockerfile    server image (amd64 + arm64)
+docker/       compose files
 docs/         documentation
 ```
 
