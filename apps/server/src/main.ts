@@ -31,7 +31,7 @@ async function start() {
   log.info('Applying database migrations', { database: database.kind });
   await database.migrate();
 
-  const app = createApp({ config, database, log, now: () => new Date() });
+  const app = createApp({ config, database, log, now: () => new Date(), fetch: globalThis.fetch });
 
   const server = serve({ fetch: app.fetch, hostname: config.host, port: config.port }, (info) => {
     log.info('VigorTally server listening', {
