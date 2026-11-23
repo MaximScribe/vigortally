@@ -55,6 +55,28 @@ export function estimateStock(
   return stock;
 }
 
+export interface StockEvent {
+  foodId: string;
+  /** Positive for purchases, negative for food eaten. */
+  grams: number;
+  /** ISO timestamp; events are applied in time order. */
+  at: string;
+}
+
+/**
+ * Assumed stock as a running balance: purchases add, eating subtracts, and the balance
+ * never drops below zero. Eating something that isn't (assumed) at home - before the
+ * first purchase or off-plan - therefore can't "use up" a later purchase.
+ */
+export function stockFromEvents(events: readonly StockEvent[]): Map<string, number> {
+  const stock = new Map<string, number>();
+  const sorted = [...events].sort((a, b) => (a.at < b.at ? -1 : a.at > b.at ? 1 : 0));
+  for (const { foodId, grams } of sorted) {
+    stock.set(foodId, Math.max(0, (stock.get(foodId) ?? 0) + grams));
+  }
+  return stock;
+}
+
 export function computeShoppingList(input: ShoppingInput): ShoppingResult {
   const stock = estimateStock(input.purchasedGrams, input.consumedGrams);
   const meals = input.plannedMeals.filter((m) => m.date >= input.today && m.date <= input.until);
