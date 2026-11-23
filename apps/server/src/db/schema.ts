@@ -5,6 +5,7 @@
 import { sql } from 'drizzle-orm';
 import {
   boolean,
+  date,
   index,
   integer,
   jsonb,
@@ -16,7 +17,13 @@ import {
   uniqueIndex,
   uuid,
 } from 'drizzle-orm/pg-core';
-import type { ActivityField, Profile, WorkoutExercise } from '@vigortally/schema';
+import type {
+  ActivityField,
+  Nutrients,
+  Profile,
+  Serving,
+  WorkoutExercise,
+} from '@vigortally/schema';
 
 const createdAt = () => timestamp({ withTimezone: true }).notNull().defaultNow();
 
@@ -168,4 +175,79 @@ export const workouts = pgTable(
     updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index('workouts_user_started_idx').on(t.userId, t.startedAt)],
+);
+
+// ---- nutrition -----------------------------------------------------------------------
+
+export const mealEnum = pgEnum('meal', ['breakfast', 'lunch', 'dinner', 'snack']);
+
+/** Foods are shared within a household. Barcode lookups are cached here too. */
+export const foods = pgTable(
+  'foods',
+  {
+    id: uuid().primaryKey(),
+    householdId: uuid()
+      .notNull()
+      .references(() => households.id, { onDelete: 'cascade' }),
+    createdBy: uuid().references(() => users.id, { onDelete: 'set null' }),
+    name: text().notNull(),
+    brand: text(),
+    barcode: text(),
+    source: text().notNull().default('custom'),
+    per100g: jsonb().$type<Nutrients>().notNull(),
+    servings: jsonb()
+      .$type<Serving[]>()
+      .notNull()
+      .default(sql`'[]'::jsonb`),
+    createdAt: createdAt(),
+  },
+  (t) => [
+    index('foods_household_idx').on(t.householdId),
+    uniqueIndex('foods_household_barcode_unique').on(t.householdId, t.barcode),
+  ],
+);
+
+export const diaryEntries = pgTable(
+  'diary_entries',
+  {
+    id: uuid().primaryKey(),
+    userId: ownedBy(),
+    date: date({ mode: 'string' }).notNull(),
+    meal: mealEnum().notNull(),
+    foodId: uuid().references(() => foods.id, { onDelete: 'set null' }),
+    /** Recipe the entry came from (snapshot kept even if the recipe is deleted). */
+    recipeId: uuid(),
+    name: text().notNull(),
+    grams: real(),
+    servings: real(),
+    /** Nutrients at the time of logging, so editing a food never rewrites history. */
+    nutrients: jsonb().$type<Nutrients>().notNull(),
+    createdAt: createdAt(),
+  },
+  (t) => [index('diary_entries_user_date_idx').on(t.userId, t.date)],
+);
+
+export const waterEntries = pgTable(
+  'water_entries',
+  {
+    id: uuid().primaryKey(),
+    userId: ownedBy(),
+    date: date({ mode: 'string' }).notNull(),
+    ml: integer().notNull(),
+    createdAt: createdAt(),
+  },
+  (t) => [index('water_entries_user_date_idx').on(t.userId, t.date)],
+);
+
+/** One weigh-in per user and day. */
+export const weighIns = pgTable(
+  'weigh_ins',
+  {
+    id: uuid().primaryKey(),
+    userId: ownedBy(),
+    date: date({ mode: 'string' }).notNull(),
+    weightKg: real().notNull(),
+    createdAt: createdAt(),
+  },
+  (t) => [uniqueIndex('weigh_ins_user_date_unique').on(t.userId, t.date)],
 );
