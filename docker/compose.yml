@@ -1,0 +1,23 @@
+# VigorTally, simplest setup: one container with the built-in database.
+# Everything is stored in ./data next to this file.
+#
+#   docker compose up -d
+#
+# Then open http://<your-server>:8080 and create the admin account.
+
+services:
+  vigortally:
+    image: vigortally/vigortally:latest
+    build:
+      context: ..
+    container_name: vigortally
+    restart: unless-stopped
+    ports:
+      - '8080:8080'
+    environment:
+      # The address your devices use, e.g. https://vigortally.your-tailnet.ts.net
+      # (used in the companion app's pairing QR code).
+      PUBLIC_URL: ''
+      TZ: Europe/Berlin
+    volumes:
+      - ./data:/data

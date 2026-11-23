@@ -58,7 +58,7 @@ packages/
   schema/     shared Zod schemas and API types
   ui/         design tokens shared by web and mobile
 Dockerfile    server image (amd64 + arm64)
-docker/       compose files
+docker/       compose files (built-in database, or with PostgreSQL)
 docs/         documentation
 ```
 
