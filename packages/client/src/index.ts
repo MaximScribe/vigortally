@@ -14,6 +14,14 @@ import type {
   Food,
   FoodInput,
   LoginInput,
+  MealPlanEntry,
+  MealPlanEntryInput,
+  PurchaseInput,
+  Recipe,
+  RecipeInput,
+  ShoppingExtra,
+  ShoppingExtraInput,
+  ShoppingList,
   PreviousSets,
   Profile,
   ProfileInput,
@@ -137,6 +145,35 @@ export function createApiClient(options: HttpOptions) {
         request<WeighIn[]>('GET', '/weigh-ins', undefined, query),
       save: (input: WeighInInput) => request<WeighIn>('PUT', `/weigh-ins/${input.id}`, input),
       remove: (id: string) => request<null>('DELETE', `/weigh-ins/${id}`),
+    },
+
+    recipes: {
+      list: () => request<Recipe[]>('GET', '/recipes'),
+      get: (id: string) => request<Recipe>('GET', `/recipes/${id}`),
+      save: (input: RecipeInput) => request<Recipe>('PUT', `/recipes/${input.id}`, input),
+      remove: (id: string) => request<null>('DELETE', `/recipes/${id}`),
+      /** Reads a recipe from a web page; returns an unsaved draft. */
+      import: (url: string) => request<RecipeInput>('POST', '/recipes/import', { url }),
+    },
+
+    mealPlan: {
+      list: (from: string, to: string) =>
+        request<MealPlanEntry[]>('GET', '/meal-plan', undefined, { from, to }),
+      save: (input: MealPlanEntryInput) =>
+        request<MealPlanEntry>('PUT', `/meal-plan/${input.id}`, input),
+      remove: (id: string) => request<null>('DELETE', `/meal-plan/${id}`),
+    },
+
+    shopping: {
+      list: (today?: string) =>
+        request<ShoppingList>('GET', '/shopping-list', undefined, { today }),
+      purchase: (input: PurchaseInput) =>
+        request<PurchaseInput>('PUT', `/purchases/${input.id}`, input),
+      undoPurchase: (id: string) => request<null>('DELETE', `/purchases/${id}`),
+      saveExtra: (input: ShoppingExtraInput) =>
+        request<ShoppingExtra>('PUT', `/shopping-extras/${input.id}`, input),
+      removeExtra: (id: string) => request<null>('DELETE', `/shopping-extras/${id}`),
+      clearDoneExtras: () => request<null>('DELETE', '/shopping-extras'),
     },
   };
 }

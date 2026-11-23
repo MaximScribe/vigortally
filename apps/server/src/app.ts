@@ -5,6 +5,7 @@ import { API_VERSION, APP_NAME, SERVER_VERSION } from './meta';
 import { requireAuth } from './auth/middleware';
 import { activityRoutes } from './routes/activities';
 import { authRoutes } from './routes/auth';
+import { kitchenRoutes, resolveRecipe } from './routes/kitchen';
 import { nutritionRoutes } from './routes/nutrition';
 
 /** Endpoints reachable without signing in. Everything else requires a session. */
@@ -61,11 +62,8 @@ export function createApp(deps: AppDeps) {
 
   api.route('/', authRoutes());
   api.route('/', activityRoutes());
-  // Recipes arrive with the kitchen module; until then recipe entries are rejected.
-  api.route(
-    '/',
-    nutritionRoutes(async () => null),
-  );
+  api.route('/', nutritionRoutes(resolveRecipe));
+  api.route('/', kitchenRoutes());
 
   // Hono ignores notFound() on mounted sub-apps, so unknown API paths use a catch-all.
   // Registered last so it never shadows real routes.

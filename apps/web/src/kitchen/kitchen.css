@@ -1,0 +1,119 @@
+.vt-kitchen {
+  padding: 0;
+  overflow: hidden;
+}
+
+.vt-kitchen__toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--vt-space-md);
+  width: 100%;
+  min-height: 64px;
+  padding: var(--vt-space-md) var(--vt-space-lg);
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.vt-kitchen__title {
+  font-weight: 600;
+}
+
+.vt-kitchen__chevron {
+  transition: transform 160ms ease;
+  color: var(--vt-color-text-muted);
+}
+
+.vt-kitchen--open .vt-kitchen__chevron {
+  transform: rotate(180deg);
+}
+
+.vt-kitchen__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vt-space-lg);
+  padding: 0 var(--vt-space-lg) var(--vt-space-lg);
+  animation: vt-sheet-up 180ms ease-out;
+}
+
+.vt-plan {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vt-space-sm);
+}
+
+.vt-plan__day + .vt-plan__day {
+  border-top: 1px solid var(--vt-color-border);
+}
+
+.vt-plan__header,
+.vt-plan__entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vt-plan__entry {
+  padding-left: var(--vt-space-md);
+}
+
+.vt-forecast {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vt-space-xs);
+  padding: var(--vt-space-md);
+  border-left: 3px solid var(--vt-color-accent);
+  border-radius: var(--vt-radius-sm);
+  background: var(--vt-color-surface-raised);
+}
+
+.vt-check {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--vt-color-border);
+  border-radius: 8px;
+  background: none;
+  color: transparent;
+  cursor: pointer;
+}
+
+.vt-check:hover,
+.vt-check[aria-pressed='true'] {
+  border-color: var(--vt-color-success);
+  color: var(--vt-color-success);
+}
+
+.vt-done {
+  color: var(--vt-color-text-subtle);
+  text-decoration: line-through;
+}
+
+.vt-ingredient {
+  display: grid;
+  grid-template-columns: 1fr 96px auto auto;
+  gap: var(--vt-space-sm);
+  align-items: end;
+}
+
+.vt-ingredient__link {
+  min-height: var(--vt-min-touch-target);
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .vt-ingredient {
+    grid-template-columns: 1fr 80px auto;
+  }
+
+  .vt-ingredient__link {
+    grid-column: 1 / -1;
+    max-width: none;
+  }
+}

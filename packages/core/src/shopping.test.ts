@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { computeShoppingList, estimateStock, type PlannedMeal } from './shopping';
+import { computeShoppingList, estimateStock, stockFromEvents, type PlannedMeal } from './shopping';
 
 const RICE = 'rice';
 const CHICKEN = 'chicken';
@@ -24,6 +24,26 @@ describe('estimateStock', () => {
     );
     expect(stock.get(RICE)).toBe(700);
     expect(stock.get(CHICKEN)).toBe(0);
+  });
+});
+
+describe('stockFromEvents', () => {
+  test('eating before buying does not cancel the purchase', () => {
+    const stock = stockFromEvents([
+      { foodId: RICE, grams: 1000, at: '2026-11-20T10:00:00Z' },
+      { foodId: RICE, grams: -2000, at: '2026-11-01T12:00:00Z' },
+      { foodId: RICE, grams: -300, at: '2026-11-21T12:00:00Z' },
+    ]);
+    expect(stock.get(RICE)).toBe(700);
+  });
+
+  test('never goes below zero', () => {
+    const stock = stockFromEvents([
+      { foodId: CHICKEN, grams: 500, at: '2026-11-20T10:00:00Z' },
+      { foodId: CHICKEN, grams: -800, at: '2026-11-21T12:00:00Z' },
+      { foodId: CHICKEN, grams: 400, at: '2026-11-22T10:00:00Z' },
+    ]);
+    expect(stock.get(CHICKEN)).toBe(400);
   });
 });
 

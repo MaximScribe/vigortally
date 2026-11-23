@@ -6,6 +6,7 @@ import {
   redirect,
   type RouterHistory,
 } from '@tanstack/react-router';
+import { RecipeEditorPage } from './kitchen/RecipeEditorPage';
 import { ActivitiesPage } from './pages/ActivitiesPage';
 import { ActivityDetailPage } from './pages/activities/ActivityDetailPage';
 import { NutritionPage } from './pages/NutritionPage';
@@ -34,6 +35,7 @@ const indexRoute = createRoute({
 const routeTree = rootRoute.addChildren([
   indexRoute,
   page('/nutrition', NutritionPage),
+  page('/kitchen/recipes/$recipeId', RecipeEditorPage),
   page('/activities', ActivitiesPage),
   page('/activities/$activityId', ActivityDetailPage),
   page('/statistics', StatisticsPage),

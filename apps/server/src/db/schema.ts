@@ -19,6 +19,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import type {
   ActivityField,
+  Ingredient,
   Nutrients,
   Profile,
   Serving,
@@ -250,4 +251,77 @@ export const weighIns = pgTable(
     createdAt: createdAt(),
   },
   (t) => [uniqueIndex('weigh_ins_user_date_unique').on(t.userId, t.date)],
+);
+
+// ---- kitchen ----------------------------------------------------------------------------
+
+const householdOwned = () =>
+  uuid()
+    .notNull()
+    .references(() => households.id, { onDelete: 'cascade' });
+
+export const recipes = pgTable(
+  'recipes',
+  {
+    id: uuid().primaryKey(),
+    householdId: householdOwned(),
+    createdBy: uuid().references(() => users.id, { onDelete: 'set null' }),
+    name: text().notNull(),
+    servings: real().notNull(),
+    ingredients: jsonb().$type<Ingredient[]>().notNull(),
+    instructions: text().notNull().default(''),
+    tags: jsonb()
+      .$type<string[]>()
+      .notNull()
+      .default(sql`'[]'::jsonb`),
+    sourceUrl: text(),
+    createdAt: createdAt(),
+    updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('recipes_household_idx').on(t.householdId)],
+);
+
+/** Recipes scheduled on a day. Shared by the household. */
+export const mealPlanEntries = pgTable(
+  'meal_plan_entries',
+  {
+    id: uuid().primaryKey(),
+    householdId: householdOwned(),
+    date: date({ mode: 'string' }).notNull(),
+    meal: mealEnum().notNull(),
+    recipeId: uuid()
+      .notNull()
+      .references(() => recipes.id, { onDelete: 'cascade' }),
+    servings: real().notNull(),
+    createdAt: createdAt(),
+  },
+  (t) => [index('meal_plan_household_date_idx').on(t.householdId, t.date)],
+);
+
+/** Items ticked off the shopping list. Together with the diary they give assumed stock. */
+export const purchases = pgTable(
+  'purchases',
+  {
+    id: uuid().primaryKey(),
+    householdId: householdOwned(),
+    foodId: uuid()
+      .notNull()
+      .references(() => foods.id, { onDelete: 'cascade' }),
+    grams: real().notNull(),
+    purchasedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('purchases_household_idx').on(t.householdId)],
+);
+
+/** Hand-written shopping list items that aren't part of any recipe. */
+export const shoppingExtras = pgTable(
+  'shopping_extras',
+  {
+    id: uuid().primaryKey(),
+    householdId: householdOwned(),
+    text: text().notNull(),
+    done: boolean().notNull().default(false),
+    createdAt: createdAt(),
+  },
+  (t) => [index('shopping_extras_household_idx').on(t.householdId)],
 );
