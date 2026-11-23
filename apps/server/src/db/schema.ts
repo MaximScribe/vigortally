@@ -325,3 +325,23 @@ export const shoppingExtras = pgTable(
   },
   (t) => [index('shopping_extras_household_idx').on(t.householdId)],
 );
+
+// ---- statistics --------------------------------------------------------------------------
+
+/** Widgets on a user's statistics dashboard, in display order. */
+export const dashboardWidgets = pgTable(
+  'dashboard_widgets',
+  {
+    id: uuid().primaryKey(),
+    userId: ownedBy(),
+    position: integer().notNull(),
+    title: text().notNull(),
+    metric: text().notNull(),
+    chart: text().notNull(),
+    rangeDays: integer().notNull(),
+    bucket: text().notNull(),
+    exerciseId: uuid(),
+    activityTypeId: uuid(),
+  },
+  (t) => [index('dashboard_widgets_user_idx').on(t.userId, t.position)],
+);
