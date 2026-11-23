@@ -41,7 +41,10 @@ export interface ColorTokens {
   setDrop: string;
   setFailure: string;
 
-  /** Macro ring segments in the nutrition tab. */
+  /**
+   * Macro ring segments in the nutrition tab. Validated as a categorical set (CVD and
+   * normal-vision separation) for both themes; always shown with a text label too.
+   */
   macroProtein: string;
   macroCarbs: string;
   macroFat: string;
@@ -70,9 +73,9 @@ export const darkColors: ColorTokens = {
   setDrop: '#a978ff',
   setFailure: '#f25f63',
 
-  macroProtein: '#3fc6b5',
-  macroCarbs: '#f4b740',
-  macroFat: '#f2805f',
+  macroProtein: '#1baf7a',
+  macroCarbs: '#c98500',
+  macroFat: '#d55181',
 };
 
 export const lightColors: ColorTokens = {
@@ -98,9 +101,9 @@ export const lightColors: ColorTokens = {
   setDrop: '#7a3fe0',
   setFailure: '#c62f35',
 
-  macroProtein: '#0f8a7b',
-  macroCarbs: '#bf8300',
-  macroFat: '#d9572f',
+  macroProtein: '#148a60',
+  macroCarbs: '#b57a00',
+  macroFat: '#c4467a',
 };
 
 export type ThemeName = 'dark' | 'light';

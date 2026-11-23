@@ -6,8 +6,13 @@ import type {
   ActivityTypeSummary,
   ChangePasswordInput,
   CreateUserInput,
+  DayNutrition,
+  DiaryEntry,
+  DiaryEntryInput,
   Exercise,
   ExerciseInput,
+  Food,
+  FoodInput,
   LoginInput,
   PreviousSets,
   Profile,
@@ -17,6 +22,9 @@ import type {
   Template,
   TemplateInput,
   User,
+  WaterEntryInput,
+  WeighIn,
+  WeighInInput,
   Workout,
   WorkoutInput,
 } from '@vigortally/schema';
@@ -106,6 +114,29 @@ export function createApiClient(options: HttpOptions) {
         }),
       save: (input: WorkoutInput) => request<Workout>('PUT', `/workouts/${input.id}`, input),
       remove: (id: string) => request<null>('DELETE', `/workouts/${id}`),
+    },
+
+    foods: {
+      search: (q = '', limit = 30) => request<Food[]>('GET', '/foods', undefined, { q, limit }),
+      recent: () => request<Food[]>('GET', '/foods/recent'),
+      barcode: (code: string) => request<Food>('GET', `/foods/barcode/${encodeURIComponent(code)}`),
+      save: (input: FoodInput) => request<Food>('PUT', `/foods/${input.id}`, input),
+      remove: (id: string) => request<null>('DELETE', `/foods/${id}`),
+    },
+
+    diary: {
+      day: (date: string) => request<DayNutrition>('GET', '/diary', undefined, { date }),
+      save: (input: DiaryEntryInput) => request<DiaryEntry>('PUT', `/diary/${input.id}`, input),
+      remove: (id: string) => request<null>('DELETE', `/diary/${id}`),
+      addWater: (input: WaterEntryInput) =>
+        request<DayNutrition>('PUT', `/water/${input.id}`, input),
+    },
+
+    weighIns: {
+      list: (query: { from?: string; to?: string } = {}) =>
+        request<WeighIn[]>('GET', '/weigh-ins', undefined, query),
+      save: (input: WeighInInput) => request<WeighIn>('PUT', `/weigh-ins/${input.id}`, input),
+      remove: (id: string) => request<null>('DELETE', `/weigh-ins/${id}`),
     },
   };
 }

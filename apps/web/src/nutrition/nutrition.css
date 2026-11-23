@@ -1,0 +1,220 @@
+/* ---- day navigation ---------------------------------------------------------- */
+
+.vt-daynav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vt-space-sm);
+}
+
+.vt-daynav__label {
+  flex: 1;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* ---- macro ring --------------------------------------------------------------- */
+
+.vt-macros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--vt-space-xl);
+}
+
+.vt-ring {
+  position: relative;
+  margin: 0;
+  width: 180px;
+  height: 180px;
+  flex: none;
+}
+
+.vt-ring svg {
+  display: block;
+}
+
+.vt-ring__segment {
+  transition: stroke-dasharray 300ms ease;
+}
+
+.vt-ring__center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.vt-ring__value {
+  font-size: 32px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.vt-ring__unit {
+  color: var(--vt-color-text-muted);
+  font-size: var(--vt-text-body-small-size);
+}
+
+.vt-ring__left {
+  margin-top: var(--vt-space-xs);
+  color: var(--vt-color-text-muted);
+  font-size: var(--vt-text-caption-size);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.vt-ring__left--over {
+  color: var(--vt-color-warning);
+}
+
+.vt-macro-bars {
+  flex: 1;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--vt-space-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vt-macro-bar__label {
+  display: flex;
+  align-items: center;
+  gap: var(--vt-space-sm);
+  margin-bottom: var(--vt-space-xs);
+}
+
+.vt-macro-bar__value {
+  margin-left: auto;
+  color: var(--vt-color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.vt-macro-bar__swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.vt-macro-bar__track {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--vt-color-surface-raised);
+  overflow: hidden;
+}
+
+.vt-macro-bar__fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 300ms ease;
+}
+
+[data-macro='protein'] {
+  background: var(--vt-color-macro-protein);
+}
+
+[data-macro='carbs'] {
+  background: var(--vt-color-macro-carbs);
+}
+
+[data-macro='fat'] {
+  background: var(--vt-color-macro-fat);
+}
+
+/* ---- small stat cards (water, weight) ----------------------------------------------- */
+
+.vt-stat-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--vt-space-md);
+}
+
+.vt-stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vt-space-sm);
+  padding: var(--vt-space-lg);
+}
+
+.vt-stat-card__value {
+  font-size: 24px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.vt-stat-card__actions {
+  display: flex;
+  gap: var(--vt-space-xs);
+  flex-wrap: wrap;
+}
+
+.vt-stat-card__actions .vt-button {
+  flex: 1;
+  min-width: 0;
+  padding: 0 var(--vt-space-sm);
+  letter-spacing: 0;
+}
+
+/* ---- meals -------------------------------------------------------------------------- */
+
+.vt-meal__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.vt-meal__kcal {
+  color: var(--vt-color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.vt-tabs {
+  display: flex;
+  gap: var(--vt-space-xs);
+  overflow-x: auto;
+}
+
+.vt-tabs button {
+  flex: none;
+  min-height: 36px;
+  padding: 0 var(--vt-space-md);
+  border: 1px solid var(--vt-color-border);
+  border-radius: var(--vt-radius-pill);
+  background: none;
+  color: var(--vt-color-text-muted);
+  cursor: pointer;
+}
+
+.vt-tabs button[aria-selected='true'] {
+  border-color: var(--vt-color-accent);
+  background: var(--vt-color-accent);
+  color: var(--vt-color-on-accent);
+}
+
+.vt-preview {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--vt-space-sm);
+  padding: var(--vt-space-md);
+  border-radius: var(--vt-radius-md);
+  background: var(--vt-color-surface);
+  text-align: center;
+}
+
+.vt-preview strong {
+  display: block;
+  font-size: var(--vt-text-headline-size);
+  font-variant-numeric: tabular-nums;
+}
+
+.vt-preview span {
+  color: var(--vt-color-text-muted);
+  font-size: var(--vt-text-caption-size);
+}
