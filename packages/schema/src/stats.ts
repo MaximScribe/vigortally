@@ -42,6 +42,12 @@ export const series = z.object({
   metric,
   unit: z.string(),
   points: z.array(seriesPoint),
+  /**
+   * One number for the whole range, for "number" widgets: the total for counts and
+   * sums, the average for daily values, the latest value for weight, the best for 1RM.
+   */
+  summary: z.number().nullable(),
+  summaryLabel: z.enum(['total', 'average', 'latest', 'best']),
 });
 export type Series = z.infer<typeof series>;
 
