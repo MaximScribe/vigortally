@@ -2,7 +2,19 @@ import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import type { AppDeps, AppEnv } from './context';
 import { API_VERSION, APP_NAME, SERVER_VERSION } from './meta';
+import { requireAuth } from './auth/middleware';
+import { activityRoutes } from './routes/activities';
 import { authRoutes } from './routes/auth';
+
+/** Endpoints reachable without signing in. Everything else requires a session. */
+const PUBLIC_ROUTES = new Set([
+  'GET /api/health',
+  'GET /api/info',
+  'GET /api/setup',
+  'POST /api/setup',
+  'POST /api/auth/login',
+  'POST /api/devices/pair',
+]);
 
 export interface ServerInfo {
   name: string;
@@ -26,6 +38,11 @@ export function createApp(deps: AppDeps) {
     await next();
   });
 
+  api.use(async (c, next) => {
+    if (PUBLIC_ROUTES.has(`${c.req.method} ${c.req.path}`)) return next();
+    return requireAuth(c, next);
+  });
+
   api.get('/health', async (c) => {
     const database = (await deps.database.ping()) ? 'ok' : 'unavailable';
     const ok = database === 'ok';
@@ -42,6 +59,7 @@ export function createApp(deps: AppDeps) {
   );
 
   api.route('/', authRoutes());
+  api.route('/', activityRoutes());
 
   // Hono ignores notFound() on mounted sub-apps, so unknown API paths use a catch-all.
   // Registered last so it never shadows real routes.

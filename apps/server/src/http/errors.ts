@@ -11,4 +11,6 @@ export function fail(status: ContentfulStatusCode, code: string, message?: strin
   });
 }
 
-export const notFound = (what = 'Not found'): never => fail(404, 'not_found', what);
+export function notFound(what = 'Not found'): never {
+  fail(404, 'not_found', what);
+}
