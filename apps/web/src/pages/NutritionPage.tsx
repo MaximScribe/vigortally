@@ -9,6 +9,7 @@ import { Button, ErrorMessage } from '../components/forms';
 import { Page, Section } from '../components/Page';
 import { formatDay, formatNumber } from '../lib/format';
 import { newId } from '../lib/ids';
+import { KitchenPanel } from '../kitchen/KitchenPanel';
 import { AddFoodSheet, mealLabels } from '../nutrition/AddFoodSheet';
 import { MacroRing } from '../nutrition/MacroRing';
 import '../components/list.css';
@@ -32,6 +33,7 @@ export function NutritionPage() {
 
   return (
     <Page title="Nutrition">
+      <KitchenPanel />
       <div className="vt-daynav">
         <button
           type="button"

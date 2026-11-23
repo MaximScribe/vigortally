@@ -114,7 +114,7 @@ function FoodList({ foods, onPick }: { foods: Food[]; onPick: (food: Food) => vo
   );
 }
 
-function SearchFoods({ onPick }: { onPick: (food: Food) => void }) {
+export function SearchFoods({ onPick }: { onPick: (food: Food) => void }) {
   const api = useApi();
   const [q, setQ] = useState('');
   const query = q.trim();
