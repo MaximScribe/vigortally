@@ -1,0 +1,18 @@
+{
+  "name": "@vigortally/core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Pure domain logic shared by the VigorTally server and apps",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@vigortally/schema": "*"
+  }
+}
