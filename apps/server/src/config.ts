@@ -24,6 +24,8 @@ const envSchema = z.object({
     .optional(),
   /** Where VigorTally keeps files (embedded database, uploads). */
   DATA_DIR: z.string().min(1).default('./data'),
+  /** Built web app to serve. Unset: look next to the server (../web/dist). */
+  WEB_DIR: z.string().min(1).optional(),
 });
 
 export interface Config {
@@ -34,6 +36,7 @@ export interface Config {
   logLevel: 'debug' | 'info' | 'warn' | 'error';
   databaseUrl: string | undefined;
   dataDir: string;
+  webDir: string | undefined;
 }
 
 export class ConfigError extends Error {
@@ -62,5 +65,6 @@ export function loadConfig(env: Record<string, string | undefined> = process.env
     logLevel: parsed.LOG_LEVEL,
     databaseUrl: parsed.DATABASE_URL,
     dataDir: parsed.DATA_DIR,
+    webDir: parsed.WEB_DIR,
   };
 }
