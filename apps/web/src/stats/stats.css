@@ -1,5 +1,6 @@
 .vt-dashboard {
   display: grid;
+  align-items: start;
   gap: var(--vt-space-lg);
 }
 

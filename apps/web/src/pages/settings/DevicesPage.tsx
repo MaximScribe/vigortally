@@ -7,7 +7,7 @@ import { useApi } from '../../api/ApiProvider';
 import { Button, ErrorMessage } from '../../components/forms';
 import { Page, Section } from '../../components/Page';
 import { useNow } from '../../hooks/useNow';
-import { formatDay, formatTime } from '../../lib/format';
+import { formatDayInSentence, formatTime } from '../../lib/format';
 import '../../components/list.css';
 
 export function DevicesPage() {
@@ -62,7 +62,7 @@ export function DevicesPage() {
                   </span>
                   <span className="vt-list__sub">
                     {device.lastUsedAt
-                      ? `Last used ${formatDay(device.lastUsedAt).toLowerCase()}, ${formatTime(device.lastUsedAt)}`
+                      ? `Last used ${formatDayInSentence(device.lastUsedAt)}, ${formatTime(device.lastUsedAt)}`
                       : 'Never used'}
                   </span>
                 </span>

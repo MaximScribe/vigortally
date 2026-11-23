@@ -39,7 +39,12 @@ export function niceTicks(min: number, max: number, count = 4): number[] {
   const step = [1, 2, 2.5, 5, 10].map((m) => m * magnitude).find((s) => s >= rough)!;
   const start = Math.floor(min / step) * step;
   const ticks: number[] = [];
-  for (let v = start; v <= max + step * 0.5; v += step) ticks.push(Math.round(v * 1e6) / 1e6);
+  // Keep adding ticks until the top one is at or above the largest value, so no mark
+  // can ever poke out above the plot area.
+  for (let v = start; ; v += step) {
+    ticks.push(Math.round(v * 1e6) / 1e6);
+    if (v >= max - 1e-9) break;
+  }
   return ticks;
 }
 

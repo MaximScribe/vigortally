@@ -37,10 +37,9 @@ test('logs a workout: previous values, set types, rest timer and finish', async 
   const { user, router } = renderApp('/activities', server);
 
   await user.click(await screen.findByRole('button', { name: 'Start an empty workout' }));
+  await user.click(await screen.findByRole('button', { name: 'Add exercises' }));
   expect(router.state.location.pathname).toBe('/workout');
   expect(screen.queryByRole('navigation', { name: 'Main' })).not.toBeInTheDocument();
-
-  await user.click(screen.getByRole('button', { name: 'Add exercises' }));
   const picker = within(await screen.findByRole('dialog', { name: 'Add exercises' }));
   await user.type(picker.getByLabelText('Search exercises'), 'bench dumbbell');
   await user.click(await picker.findByRole('button', { name: /^Bench Press \(Dumbbell\)/ }));
@@ -89,9 +88,9 @@ test('a minimised workout can be resumed', async () => {
   const { user } = renderApp('/activities', server);
 
   await user.click(await screen.findByRole('button', { name: 'Start an empty workout' }));
-  await user.click(screen.getByRole('button', { name: 'Minimise workout' }));
+  await user.click(await screen.findByRole('button', { name: 'Minimise workout' }));
   await user.click(await screen.findByRole('button', { name: /Resume/ }));
-  expect(screen.getByRole('button', { name: 'Finish' })).toBeVisible();
+  expect(await screen.findByRole('button', { name: 'Finish' })).toBeVisible();
 });
 
 test('creates a template and starts a workout from it', async () => {
@@ -123,7 +122,7 @@ test('creates a template and starts a workout from it', async () => {
 
   await user.click(card);
   await user.click(await screen.findByRole('button', { name: 'Start workout' }));
-  expect(screen.getByLabelText('Workout name')).toHaveValue('Upper');
+  expect(await screen.findByLabelText('Workout name')).toHaveValue('Upper');
   expect(getActiveWorkout()?.templateId).toBe(templates[0]!.id);
   expect(getActiveWorkout()?.exercises[0]?.sets).toHaveLength(4);
 });

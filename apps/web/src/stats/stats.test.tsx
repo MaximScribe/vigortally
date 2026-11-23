@@ -72,6 +72,9 @@ function statsServer() {
 test('nice ticks', () => {
   expect(niceTicks(0, 950)).toEqual([0, 250, 500, 750, 1000]);
   expect(niceTicks(80.6, 82)).toEqual([80.5, 81, 81.5, 82]);
+  // The top tick always covers the maximum (bars used to poke out above 2,000).
+  expect(niceTicks(0, 2194).at(-1)).toBeGreaterThanOrEqual(2194);
+  expect(niceTicks(0, 13_480).at(-1)).toBeGreaterThanOrEqual(13_480);
 });
 
 describe('statistics dashboard', () => {
