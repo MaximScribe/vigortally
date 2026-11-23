@@ -40,6 +40,13 @@ export type ActivityType = z.infer<typeof activityType>;
 export const activityTypeInput = activityType;
 export type ActivityTypeInput = z.input<typeof activityTypeInput>;
 
+/** Activity with usage numbers, for the Activities overview. */
+export const activityTypeSummary = activityType.extend({
+  sessionCount: z.number().int(),
+  lastAt: z.string().nullable(),
+});
+export type ActivityTypeSummary = z.infer<typeof activityTypeSummary>;
+
 export const fieldValue = z.union([z.number().finite(), z.string().max(200)]);
 
 export const activitySessionInput = z.object({
@@ -139,7 +146,10 @@ export const workoutInput = z.object({
   exercises: z.array(workoutExercise).max(40),
 });
 export type WorkoutInput = z.input<typeof workoutInput>;
-export const workout = workoutInput;
+export const workout = workoutInput.extend({
+  /** Weight moved over completed working sets. */
+  volumeKg: z.number(),
+});
 export type Workout = z.infer<typeof workout>;
 
 export const templateInput = z.object({
