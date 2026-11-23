@@ -37,3 +37,26 @@ export const users = pgTable(
   },
   (t) => [uniqueIndex('users_email_unique').on(sql`lower(${t.email})`)],
 );
+
+export const sessionKindEnum = pgEnum('session_kind', ['web', 'device']);
+
+/** Login sessions. Web sessions use a cookie; paired devices send a Bearer token. */
+export const sessions = pgTable(
+  'sessions',
+  {
+    id: uuid().primaryKey(),
+    userId: uuid()
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    /** SHA-256 of the token; the token itself is never stored. */
+    tokenHash: text().notNull(),
+    kind: sessionKindEnum().notNull(),
+    /** Device name for paired apps ("Pixel 9"), user agent summary for web. */
+    name: text().notNull().default(''),
+    createdAt: createdAt(),
+    lastUsedAt: timestamp({ withTimezone: true }),
+    /** Web sessions expire; device tokens last until revoked. */
+    expiresAt: timestamp({ withTimezone: true }),
+  },
+  (t) => [uniqueIndex('sessions_token_hash_unique').on(t.tokenHash)],
+);

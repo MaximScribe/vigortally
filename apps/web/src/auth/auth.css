@@ -1,0 +1,30 @@
+.vt-splash {
+  min-height: 100%;
+}
+
+.vt-auth {
+  display: grid;
+  place-items: center;
+  min-height: 100%;
+  padding: var(--vt-space-xl) var(--vt-screen-gutter);
+}
+
+.vt-auth__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vt-space-lg);
+  width: 100%;
+  max-width: 400px;
+}
+
+.vt-auth__card p {
+  margin: 0;
+}
+
+.vt-auth__brand {
+  color: var(--vt-color-accent);
+  font-size: var(--vt-text-label-size);
+  font-weight: 600;
+  letter-spacing: var(--vt-text-label-letter-spacing);
+  text-transform: uppercase;
+}

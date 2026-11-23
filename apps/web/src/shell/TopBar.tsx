@@ -1,4 +1,5 @@
-import { User } from 'lucide-react';
+import { useMe } from '../auth/AuthGate';
+import { Avatar } from './Avatar';
 
 interface TopBarProps {
   onOpenMenu: () => void;
@@ -7,17 +8,18 @@ interface TopBarProps {
 
 /** Slim bar above every page. The profile picture on the right opens the side menu. */
 export function TopBar({ onOpenMenu, menuOpen }: TopBarProps) {
+  const me = useMe();
   return (
     <header className="vt-topbar">
       <button
         type="button"
-        className="vt-avatar"
+        className="vt-avatar-button"
         onClick={onOpenMenu}
         aria-label="Open menu"
         aria-haspopup="dialog"
         aria-expanded={menuOpen}
       >
-        <User aria-hidden="true" size={20} />
+        <Avatar name={me.user.name} />
       </button>
     </header>
   );

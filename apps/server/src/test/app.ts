@@ -12,6 +12,7 @@ export async function createTestApp(overrides: Partial<AppDeps> = {}) {
     database,
     log: createLogger('error', () => {}),
     now: () => new Date(),
+    fetch: () => Promise.reject(new Error('No network in tests')),
     ...overrides,
   };
   const app = createApp(deps);

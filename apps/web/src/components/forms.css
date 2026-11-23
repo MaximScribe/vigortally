@@ -1,0 +1,137 @@
+.vt-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vt-space-lg);
+}
+
+.vt-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vt-space-xs);
+  min-width: 0;
+}
+
+.vt-field__label {
+  color: var(--vt-color-text-muted);
+  font-size: var(--vt-text-body-small-size);
+  line-height: var(--vt-text-body-small-line-height);
+}
+
+.vt-field__control {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.vt-field__suffix {
+  position: absolute;
+  right: var(--vt-space-md);
+  color: var(--vt-color-text-subtle);
+  pointer-events: none;
+}
+
+.vt-field__hint {
+  margin: 0;
+  color: var(--vt-color-text-subtle);
+  font-size: var(--vt-text-caption-size);
+}
+
+.vt-input {
+  width: 100%;
+  min-height: var(--vt-min-touch-target);
+  padding: 0 var(--vt-space-md);
+  border: 1px solid transparent;
+  border-radius: var(--vt-radius-md);
+  background: var(--vt-color-input);
+  color: var(--vt-color-text);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+}
+
+.vt-input::placeholder {
+  color: var(--vt-color-text-subtle);
+}
+
+.vt-input:focus {
+  outline: none;
+  border-color: var(--vt-color-accent);
+}
+
+textarea.vt-input {
+  min-height: 120px;
+  padding: var(--vt-space-md);
+  resize: vertical;
+}
+
+.vt-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--vt-space-sm);
+  min-height: var(--vt-min-touch-target);
+  padding: 0 var(--vt-space-lg);
+  border: 0;
+  border-radius: var(--vt-radius-md);
+  font-size: var(--vt-text-button-size);
+  font-weight: var(--vt-text-button-weight);
+  letter-spacing: var(--vt-text-button-letter-spacing);
+  text-transform: var(--vt-text-button-transform);
+  cursor: pointer;
+  transition:
+    background 120ms ease,
+    opacity 120ms ease;
+}
+
+.vt-button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.vt-button--block {
+  width: 100%;
+}
+
+.vt-button--primary {
+  background: var(--vt-color-accent);
+  color: var(--vt-color-on-accent);
+}
+
+.vt-button--primary:not(:disabled):hover {
+  background: var(--vt-color-accent-pressed);
+}
+
+.vt-button--secondary {
+  background: var(--vt-color-surface-raised);
+  color: var(--vt-color-text);
+}
+
+.vt-button--ghost {
+  padding: 0 var(--vt-space-sm);
+  background: transparent;
+  color: var(--vt-color-accent);
+}
+
+.vt-button--ghost:not(:disabled):hover {
+  background: var(--vt-color-surface-raised);
+}
+
+.vt-button--danger {
+  background: transparent;
+  color: var(--vt-color-danger);
+  border: 1px solid var(--vt-color-border);
+}
+
+.vt-error {
+  margin: 0;
+  color: var(--vt-color-danger);
+  font-size: var(--vt-text-body-small-size);
+}
+
+.vt-row {
+  display: flex;
+  gap: var(--vt-space-md);
+}
+
+.vt-row > * {
+  flex: 1;
+}

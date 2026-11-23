@@ -1,6 +1,8 @@
 import { Hono } from 'hono';
+import { HTTPException } from 'hono/http-exception';
 import type { AppDeps, AppEnv } from './context';
 import { API_VERSION, APP_NAME, SERVER_VERSION } from './meta';
+import { authRoutes } from './routes/auth';
 
 export interface ServerInfo {
   name: string;
@@ -39,11 +41,14 @@ export function createApp(deps: AppDeps) {
     }),
   );
 
+  api.route('/', authRoutes());
+
   // Hono ignores notFound() on mounted sub-apps, so unknown API paths use a catch-all.
   // Registered last so it never shadows real routes.
   api.all('*', (c) => c.json({ error: 'not_found' }, 404));
 
   api.onError((error, c) => {
+    if (error instanceof HTTPException) return error.getResponse();
     deps.log.error('Unhandled error', { path: c.req.path, error: String(error) });
     return c.json({ error: 'internal_error' }, 500);
   });

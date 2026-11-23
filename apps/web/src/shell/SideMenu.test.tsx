@@ -31,7 +31,7 @@ describe('side menu', () => {
       'aria-expanded',
       'true',
     );
-    for (const label of ['Settings', 'Connected devices', 'Integrations']) {
+    for (const label of ['Profile & goals', 'Household', 'Connected devices', 'Sign out']) {
       expect(dialog).toHaveTextContent(label);
     }
     expect(screen.getByRole('button', { name: 'Close menu' })).toHaveFocus();

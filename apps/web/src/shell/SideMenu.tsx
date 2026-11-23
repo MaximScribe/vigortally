@@ -1,7 +1,12 @@
+import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
 import { sideMenuWidth } from '@vigortally/ui';
-import { ChevronRight, User, X } from 'lucide-react';
+import { ChevronRight, LogOut, X } from 'lucide-react';
 import { useEffect, useRef } from 'react';
+import { useApi } from '../api/ApiProvider';
+import { useMe, useRefreshAuth } from '../auth/AuthGate';
 import { useWindowSize } from '../hooks/useWindowSize';
+import { Avatar } from './Avatar';
 import { menuItems } from './menuItems';
 import { ThemeSwitch } from './ThemeSwitch';
 
@@ -19,6 +24,11 @@ export function SideMenu({ open, onClose }: SideMenuProps) {
   const size = useWindowSize();
   const width = sideMenuWidth(size);
   const closeButton = useRef<HTMLButtonElement>(null);
+  const me = useMe();
+  const api = useApi();
+  const navigate = useNavigate();
+  const refreshAuth = useRefreshAuth();
+  const logout = useMutation({ mutationFn: api.auth.logout, onSettled: refreshAuth });
 
   useEffect(() => {
     if (!open) return;
@@ -42,12 +52,10 @@ export function SideMenu({ open, onClose }: SideMenuProps) {
       >
         <div className="vt-menu__header">
           <div className="vt-menu__profile">
-            <span className="vt-avatar vt-avatar--large" aria-hidden="true">
-              <User size={24} />
-            </span>
+            <Avatar name={me.user.name} size="large" />
             <div>
-              <p className="vt-title">Not signed in</p>
-              <p className="vt-muted vt-menu__hint">Accounts arrive with the next update</p>
+              <p className="vt-title">{me.user.name}</p>
+              <p className="vt-muted vt-menu__hint">{me.user.email}</p>
             </div>
           </div>
           <button
@@ -67,9 +75,19 @@ export function SideMenu({ open, onClose }: SideMenuProps) {
         </section>
 
         <ul className="vt-menu__list">
-          {menuItems.map(({ id, label, description, icon: Icon }) => (
+          {menuItems.map(({ id, label, description, icon: Icon, to }) => (
             <li key={id}>
-              <button type="button" className="vt-menu__item" disabled title="Coming soon">
+              <button
+                type="button"
+                className="vt-menu__item"
+                disabled={!to}
+                title={to ? undefined : 'Coming soon'}
+                onClick={() => {
+                  if (!to) return;
+                  void navigate({ to });
+                  onClose();
+                }}
+              >
                 <Icon className="vt-menu__icon" aria-hidden="true" size={20} />
                 <span className="vt-menu__text">
                   <span>{label}</span>
@@ -80,6 +98,16 @@ export function SideMenu({ open, onClose }: SideMenuProps) {
             </li>
           ))}
         </ul>
+
+        <button
+          type="button"
+          className="vt-menu__item vt-menu__signout"
+          onClick={() => logout.mutate()}
+          disabled={logout.isPending}
+        >
+          <LogOut className="vt-menu__icon" aria-hidden="true" size={20} />
+          <span className="vt-menu__text">Sign out</span>
+        </button>
       </aside>
     </div>
   );
