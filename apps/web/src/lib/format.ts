@@ -25,6 +25,12 @@ export function formatDay(value: string | Date, now = new Date()): string {
   return dateFormat.format(date);
 }
 
+/** `formatDay` for use mid-sentence: "until today", "until Thursday", "until 28 Nov 2026". */
+export function formatDayInSentence(value: string | Date, now = new Date()): string {
+  const label = formatDay(value, now);
+  return ['Today', 'Yesterday', 'Tomorrow'].includes(label) ? label.toLowerCase() : label;
+}
+
 export function formatTime(value: string | Date): string {
   return timeFormat.format(typeof value === 'string' ? new Date(value) : value);
 }

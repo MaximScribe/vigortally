@@ -169,6 +169,7 @@
 
 .vt-sets {
   width: 100%;
+  table-layout: fixed;
   border-collapse: separate;
   border-spacing: 0 var(--vt-space-sm);
 }
@@ -197,15 +198,23 @@
   height: var(--vt-set-row-height);
 }
 
-.vt-sets td:first-child {
-  width: 44px;
+/* Same column widths in every exercise, so KG and REPS line up down the page. */
+.vt-sets col.vt-col-set {
+  width: 40px;
 }
 
-.vt-sets td:last-child {
+.vt-sets col.vt-col-input {
+  width: 19%;
+}
+
+.vt-sets col.vt-col-check {
   width: 52px;
 }
 
 .vt-sets__previous {
+  font-size: var(--vt-text-body-small-size);
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: var(--vt-color-text-muted);
   font-variant-numeric: tabular-nums;
   text-align: left !important;
@@ -250,7 +259,7 @@
 
 .vt-set-input {
   width: 100%;
-  min-width: 56px;
+  min-width: 0;
   height: 40px;
   border: 1px solid transparent;
   border-radius: var(--vt-radius-md);

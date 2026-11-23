@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useApi } from '../api/ApiProvider';
 import { ErrorMessage } from '../components/forms';
 import { EmptyState, Page, Section } from '../components/Page';
-import { formatDay } from '../lib/format';
+import { formatDayInSentence } from '../lib/format';
 import { activityIcon } from '../lib/icons';
 import { QuickStart } from '../workout/QuickStart';
 import { Templates } from '../workout/Templates';
@@ -57,7 +57,7 @@ export function ActivitiesPage() {
                       <span className="vt-list__sub">
                         {activity.sessionCount === 0
                           ? 'No sessions yet'
-                          : `${activity.sessionCount} ${activity.sessionCount === 1 ? 'session' : 'sessions'} · last ${formatDay(activity.lastAt!).toLowerCase()}`}
+                          : `${activity.sessionCount} ${activity.sessionCount === 1 ? 'session' : 'sessions'} · last ${formatDayInSentence(activity.lastAt!)}`}
                       </span>
                     </span>
                     <ChevronRight aria-hidden="true" size={18} />

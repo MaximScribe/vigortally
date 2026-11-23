@@ -5,7 +5,7 @@ import { Check, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useApi } from '../api/ApiProvider';
 import { Button, ErrorMessage } from '../components/forms';
-import { formatDay, formatNumber } from '../lib/format';
+import { formatDayInSentence, formatNumber } from '../lib/format';
 import { newId } from '../lib/ids';
 
 function formatGrams(grams: number): string {
@@ -51,11 +51,11 @@ export function ShoppingTab() {
               <strong>
                 Shop in {days} {days === 1 ? 'day' : 'days'}
               </strong>{' '}
-              — planned meals covered until {formatDay(data.coveredUntil!).toLowerCase()}.
+              — planned meals covered until {formatDayInSentence(data.coveredUntil!)}.
             </span>
           )}
           <span className="vt-muted">
-            List covers meals until {formatDay(data.until).toLowerCase()}.
+            List covers meals until {formatDayInSentence(data.until)}.
           </span>
         </div>
       )}

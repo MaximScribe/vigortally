@@ -218,3 +218,9 @@
   color: var(--vt-color-text-muted);
   font-size: var(--vt-text-caption-size);
 }
+
+.vt-meal__kcal {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vt-space-xs);
+}

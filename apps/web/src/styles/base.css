@@ -89,3 +89,8 @@ a {
   flex: none;
   margin: 0;
 }
+
+/* Buttons next to inputs keep their natural width. */
+.vt-row--end > .vt-button {
+  flex: none;
+}

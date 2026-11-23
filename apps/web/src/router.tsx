@@ -3,27 +3,39 @@ import {
   createRootRoute,
   createRoute,
   createRouter,
+  lazyRouteComponent,
   redirect,
+  type RouteComponent,
   type RouterHistory,
 } from '@tanstack/react-router';
-import { RecipeEditorPage } from './kitchen/RecipeEditorPage';
 import { ActivitiesPage } from './pages/ActivitiesPage';
-import { ActivityDetailPage } from './pages/activities/ActivityDetailPage';
 import { NutritionPage } from './pages/NutritionPage';
-import { DevicesPage } from './pages/settings/DevicesPage';
-import { HouseholdPage } from './pages/settings/HouseholdPage';
-import { ProfilePage } from './pages/settings/ProfilePage';
-import { StatisticsPage } from './pages/StatisticsPage';
 import { AppShell } from './shell/AppShell';
 import { defaultTab } from './shell/tabs';
-import { TemplateEditorPage } from './workout/TemplateEditorPage';
-import { WorkoutPage } from './workout/WorkoutPage';
 
 const rootRoute = createRootRoute({ component: AppShell });
 
-function page<P extends string>(path: P, component: () => React.ReactNode) {
+function page<P extends string>(path: P, component: RouteComponent) {
   return createRoute({ getParentRoute: () => rootRoute, path, component });
 }
+
+// The two everyday tabs load with the app; everything else is fetched on first use.
+const lazy = {
+  recipeEditor: lazyRouteComponent(() => import('./kitchen/RecipeEditorPage'), 'RecipeEditorPage'),
+  activityDetail: lazyRouteComponent(
+    () => import('./pages/activities/ActivityDetailPage'),
+    'ActivityDetailPage',
+  ),
+  statistics: lazyRouteComponent(() => import('./pages/StatisticsPage'), 'StatisticsPage'),
+  workout: lazyRouteComponent(() => import('./workout/WorkoutPage'), 'WorkoutPage'),
+  templateEditor: lazyRouteComponent(
+    () => import('./workout/TemplateEditorPage'),
+    'TemplateEditorPage',
+  ),
+  profile: lazyRouteComponent(() => import('./pages/settings/ProfilePage'), 'ProfilePage'),
+  household: lazyRouteComponent(() => import('./pages/settings/HouseholdPage'), 'HouseholdPage'),
+  devices: lazyRouteComponent(() => import('./pages/settings/DevicesPage'), 'DevicesPage'),
+};
 
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -36,15 +48,15 @@ const indexRoute = createRoute({
 const routeTree = rootRoute.addChildren([
   indexRoute,
   page('/nutrition', NutritionPage),
-  page('/kitchen/recipes/$recipeId', RecipeEditorPage),
+  page('/kitchen/recipes/$recipeId', lazy.recipeEditor),
   page('/activities', ActivitiesPage),
-  page('/activities/$activityId', ActivityDetailPage),
-  page('/statistics', StatisticsPage),
-  page('/workout', WorkoutPage),
-  page('/templates/$templateId', TemplateEditorPage),
-  page('/settings/profile', ProfilePage),
-  page('/settings/household', HouseholdPage),
-  page('/settings/devices', DevicesPage),
+  page('/activities/$activityId', lazy.activityDetail),
+  page('/statistics', lazy.statistics),
+  page('/workout', lazy.workout),
+  page('/templates/$templateId', lazy.templateEditor),
+  page('/settings/profile', lazy.profile),
+  page('/settings/household', lazy.household),
+  page('/settings/devices', lazy.devices),
 ]);
 
 export function createAppRouter(history: RouterHistory = createBrowserHistory()) {

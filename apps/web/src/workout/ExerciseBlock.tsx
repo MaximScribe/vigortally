@@ -126,6 +126,13 @@ export function ExerciseBlock({
       </div>
 
       <table className={`vt-sets ${mode === 'template' ? 'vt-sets--template' : ''}`}>
+        <colgroup>
+          <col className="vt-col-set" />
+          {mode === 'log' && <col />}
+          <col className="vt-col-input" />
+          <col className="vt-col-input" />
+          {mode === 'log' && <col className="vt-col-check" />}
+        </colgroup>
         <thead>
           <tr>
             <th scope="col">Set</th>
