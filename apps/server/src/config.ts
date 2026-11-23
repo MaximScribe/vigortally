@@ -17,6 +17,13 @@ const envSchema = z.object({
     .transform((url) => url.replace(/\/+$/, ''))
     .optional(),
   LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
+  /** External PostgreSQL. Without it, an embedded database is stored in DATA_DIR. */
+  DATABASE_URL: z
+    .string()
+    .regex(/^postgres(ql)?:\/\//, 'Must start with postgres:// or postgresql://')
+    .optional(),
+  /** Where VigorTally keeps files (embedded database, uploads). */
+  DATA_DIR: z.string().min(1).default('./data'),
 });
 
 export interface Config {
@@ -25,6 +32,8 @@ export interface Config {
   port: number;
   publicUrl: string | undefined;
   logLevel: 'debug' | 'info' | 'warn' | 'error';
+  databaseUrl: string | undefined;
+  dataDir: string;
 }
 
 export class ConfigError extends Error {
@@ -51,5 +60,7 @@ export function loadConfig(env: Record<string, string | undefined> = process.env
     port: parsed.PORT,
     publicUrl: parsed.PUBLIC_URL,
     logLevel: parsed.LOG_LEVEL,
+    databaseUrl: parsed.DATABASE_URL,
+    dataDir: parsed.DATA_DIR,
   };
 }

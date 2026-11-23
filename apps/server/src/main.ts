@@ -1,13 +1,14 @@
 import { serve } from '@hono/node-server';
 import { createApp } from './app';
-import { ConfigError, loadConfig } from './config';
+import { ConfigError, loadConfig, type Config } from './config';
+import { openDatabase } from './db/client';
+import { findMigrationsFolder } from './db/migrations';
 import { createLogger } from './logger';
 import { API_VERSION, SERVER_VERSION } from './meta';
 
-function start() {
-  let config;
+function readConfig(): Config {
   try {
-    config = loadConfig();
+    return loadConfig();
   } catch (error) {
     if (error instanceof ConfigError) {
       console.error(error.message);
@@ -15,9 +16,22 @@ function start() {
     }
     throw error;
   }
+}
 
+async function start() {
+  const config = readConfig();
   const log = createLogger(config.logLevel);
-  const app = createApp();
+
+  const database = await openDatabase(
+    config.databaseUrl
+      ? { kind: 'postgres', url: config.databaseUrl }
+      : { kind: 'embedded', dataDir: config.dataDir },
+    { migrationsFolder: findMigrationsFolder() },
+  );
+  log.info('Applying database migrations', { database: database.kind });
+  await database.migrate();
+
+  const app = createApp({ config, database, log, now: () => new Date() });
 
   const server = serve({ fetch: app.fetch, hostname: config.host, port: config.port }, (info) => {
     log.info('VigorTally server listening', {
@@ -26,13 +40,24 @@ function start() {
       version: SERVER_VERSION,
       apiVersion: API_VERSION,
       env: config.env,
+      database: database.kind,
     });
+  });
+
+  server.on('error', (error: NodeJS.ErrnoException) => {
+    log.error('Could not start the HTTP server', {
+      error: error.code ?? String(error),
+      host: config.host,
+      port: config.port,
+    });
+    process.exit(1);
   });
 
   // Docker sends SIGTERM on `docker stop`; finish open requests before exiting.
   const shutdown = (signal: string) => {
     log.info('Shutting down', { signal });
-    server.close((error) => {
+    server.close(async (error) => {
+      await database.close().catch(() => {});
       if (error) {
         log.error('Error while closing the server', { error: String(error) });
         process.exit(1);
@@ -47,4 +72,7 @@ function start() {
   process.on('SIGINT', () => shutdown('SIGINT'));
 }
 
-start();
+start().catch((error: unknown) => {
+  console.error('Failed to start VigorTally:', error);
+  process.exit(1);
+});

@@ -9,6 +9,8 @@ describe('loadConfig', () => {
       port: 8080,
       publicUrl: undefined,
       logLevel: 'info',
+      databaseUrl: undefined,
+      dataDir: './data',
     });
   });
 
@@ -42,6 +44,13 @@ describe('loadConfig', () => {
     expect(load).toThrow(/PORT/);
     expect(load).toThrow(/PUBLIC_URL/);
     expect(load).toThrow(/LOG_LEVEL/);
+  });
+
+  test('accepts postgres URLs only', () => {
+    expect(loadConfig({ DATABASE_URL: 'postgres://u:p@db:5432/vt' }).databaseUrl).toBe(
+      'postgres://u:p@db:5432/vt',
+    );
+    expect(() => loadConfig({ DATABASE_URL: 'mysql://x' })).toThrow(/DATABASE_URL/);
   });
 
   test('rejects out-of-range ports', () => {
