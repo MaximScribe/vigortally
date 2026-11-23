@@ -7,6 +7,7 @@ import type {
   ChangePasswordInput,
   CreateUserInput,
   DayNutrition,
+  Device,
   DiaryEntry,
   DiaryEntryInput,
   Exercise,
@@ -22,6 +23,9 @@ import type {
   ShoppingExtra,
   ShoppingExtraInput,
   ShoppingList,
+  PairInput,
+  PairingCode,
+  PairResult,
   PreviousSets,
   Profile,
   ProfileInput,
@@ -178,6 +182,14 @@ export function createApiClient(options: HttpOptions) {
         request<ShoppingExtra>('PUT', `/shopping-extras/${input.id}`, input),
       removeExtra: (id: string) => request<null>('DELETE', `/shopping-extras/${id}`),
       clearDoneExtras: () => request<null>('DELETE', '/shopping-extras'),
+    },
+
+    devices: {
+      list: () => request<Device[]>('GET', '/devices'),
+      createPairingCode: () => request<PairingCode>('POST', '/devices/pairing'),
+      /** Used by the companion app (no session yet): trade a code for a device token. */
+      pair: (input: PairInput) => request<PairResult>('POST', '/devices/pair', input),
+      revoke: (id: string) => request<null>('DELETE', `/devices/${id}`),
     },
 
     stats: {

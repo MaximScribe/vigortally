@@ -75,6 +75,8 @@ export type ProfileInput = z.input<typeof profileInput>;
 export const device = z.object({
   id,
   name: z.string(),
+  /** `web` for browser sessions, `device` for paired companion apps. */
+  kind: z.enum(['web', 'device']),
   createdAt: z.string(),
   lastUsedAt: z.string().nullable(),
   current: z.boolean(),

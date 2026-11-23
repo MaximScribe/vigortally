@@ -10,6 +10,7 @@ import { RecipeEditorPage } from './kitchen/RecipeEditorPage';
 import { ActivitiesPage } from './pages/ActivitiesPage';
 import { ActivityDetailPage } from './pages/activities/ActivityDetailPage';
 import { NutritionPage } from './pages/NutritionPage';
+import { DevicesPage } from './pages/settings/DevicesPage';
 import { HouseholdPage } from './pages/settings/HouseholdPage';
 import { ProfilePage } from './pages/settings/ProfilePage';
 import { StatisticsPage } from './pages/StatisticsPage';
@@ -43,6 +44,7 @@ const routeTree = rootRoute.addChildren([
   page('/templates/$templateId', TemplateEditorPage),
   page('/settings/profile', ProfilePage),
   page('/settings/household', HouseholdPage),
+  page('/settings/devices', DevicesPage),
 ]);
 
 export function createAppRouter(history: RouterHistory = createBrowserHistory()) {

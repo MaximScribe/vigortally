@@ -345,3 +345,15 @@ export const dashboardWidgets = pgTable(
   },
   (t) => [index('dashboard_widgets_user_idx').on(t.userId, t.position)],
 );
+
+// ---- device pairing ------------------------------------------------------------------------
+
+/** One-time codes shown as a QR code in the web app; the companion app redeems them. */
+export const pairingCodes = pgTable('pairing_codes', {
+  /** SHA-256 of the code. */
+  codeHash: text().primaryKey(),
+  userId: ownedBy(),
+  expiresAt: timestamp({ withTimezone: true }).notNull(),
+  usedAt: timestamp({ withTimezone: true }),
+  createdAt: createdAt(),
+});
