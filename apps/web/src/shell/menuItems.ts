@@ -30,6 +30,7 @@ export const menuItems: readonly MenuItem[] = [
     label: 'Connected devices',
     description: 'Pair the companion app',
     icon: Smartphone,
+    to: '/settings/devices',
   },
   {
     id: 'integrations',

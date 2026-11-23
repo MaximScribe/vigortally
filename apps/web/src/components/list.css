@@ -57,3 +57,49 @@
   padding: var(--vt-space-lg);
   color: var(--vt-color-text-muted);
 }
+
+/* ---- device pairing ------------------------------------------------------------ */
+
+.vt-pairing {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vt-space-xl);
+  align-items: center;
+}
+
+.vt-pairing__qr {
+  width: 220px;
+  height: 220px;
+  padding: var(--vt-space-sm);
+  border-radius: var(--vt-radius-md);
+  /* QR codes need dark-on-light to scan reliably, in either theme. */
+  background: #ffffff;
+}
+
+.vt-pairing__qr svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.vt-pairing__details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vt-space-xs);
+  min-width: 0;
+}
+
+.vt-pairing__details p {
+  margin: 0;
+}
+
+.vt-pairing__value {
+  overflow-wrap: anywhere;
+}
+
+.vt-pairing__code {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+}
