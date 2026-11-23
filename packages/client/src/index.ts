@@ -25,6 +25,8 @@ import type {
   PreviousSets,
   Profile,
   ProfileInput,
+  Series,
+  SeriesQuery,
   SetupInput,
   SetupStatus,
   Template,
@@ -33,6 +35,8 @@ import type {
   WaterEntryInput,
   WeighIn,
   WeighInInput,
+  Widget,
+  WidgetInput,
   Workout,
   WorkoutInput,
 } from '@vigortally/schema';
@@ -174,6 +178,21 @@ export function createApiClient(options: HttpOptions) {
         request<ShoppingExtra>('PUT', `/shopping-extras/${input.id}`, input),
       removeExtra: (id: string) => request<null>('DELETE', `/shopping-extras/${id}`),
       clearDoneExtras: () => request<null>('DELETE', '/shopping-extras'),
+    },
+
+    stats: {
+      series: (query: SeriesQuery & { tzOffset?: number }) =>
+        request<Series>('GET', '/stats/series', undefined, {
+          ...query,
+          tzOffset: query.tzOffset ?? -new Date().getTimezoneOffset(),
+        }),
+    },
+
+    dashboard: {
+      list: () => request<Widget[]>('GET', '/dashboard'),
+      save: (input: WidgetInput) => request<Widget>('PUT', `/dashboard/widgets/${input.id}`, input),
+      reorder: (ids: string[]) => request<Widget[]>('PUT', '/dashboard/order', { ids }),
+      remove: (id: string) => request<null>('DELETE', `/dashboard/widgets/${id}`),
     },
   };
 }
