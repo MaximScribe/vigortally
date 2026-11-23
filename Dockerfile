@@ -19,7 +19,8 @@ WORKDIR /app
 
 ENV NODE_ENV=production \
     HOST=0.0.0.0 \
-    PORT=8080
+    PORT=8080 \
+    DATA_DIR=/data
 
 # Only the production dependencies of the server.
 COPY --from=build /app/package.json /app/package-lock.json ./
@@ -28,6 +29,7 @@ RUN npm ci --workspace=@vigortally/server --omit=dev --ignore-scripts \
  && npm cache clean --force
 
 COPY --from=build /app/apps/server/dist ./apps/server/dist
+COPY --from=build /app/apps/server/drizzle ./apps/server/drizzle
 
 RUN mkdir -p /data && chown node:node /data
 VOLUME ["/data"]
