@@ -7,6 +7,8 @@ import { ErrorMessage } from '../components/forms';
 import { EmptyState, Page, Section } from '../components/Page';
 import { formatDay } from '../lib/format';
 import { activityIcon } from '../lib/icons';
+import { QuickStart } from '../workout/QuickStart';
+import '../workout/workout.css';
 import { AddActivitySheet } from './activities/AddActivitySheet';
 import '../components/list.css';
 
@@ -18,6 +20,7 @@ export function ActivitiesPage() {
 
   return (
     <Page title="Activities">
+      <QuickStart />
       <Section
         label="My activities"
         action={
