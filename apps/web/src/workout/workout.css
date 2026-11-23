@@ -329,3 +329,48 @@
     opacity: 0.35;
   }
 }
+
+/* ---- template cards ---------------------------------------------------------------- */
+
+.vt-templates {
+  display: grid;
+  gap: var(--vt-space-lg);
+}
+
+@media (min-width: 900px) {
+  .vt-templates {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.vt-template {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--vt-space-xs);
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.vt-template:hover {
+  border-color: var(--vt-color-accent);
+}
+
+.vt-template__exercises {
+  display: flex;
+  flex-direction: column;
+  margin: var(--vt-space-sm) 0;
+  color: var(--vt-color-text-muted);
+}
+
+.vt-template__superset {
+  padding-left: var(--vt-space-md);
+  border-left: 3px solid var(--vt-color-border);
+}
+
+.vt-template__preview {
+  margin: 0;
+  padding-left: var(--vt-space-lg);
+  line-height: 1.8;
+}

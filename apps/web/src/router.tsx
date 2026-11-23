@@ -14,6 +14,7 @@ import { ProfilePage } from './pages/settings/ProfilePage';
 import { StatisticsPage } from './pages/StatisticsPage';
 import { AppShell } from './shell/AppShell';
 import { defaultTab } from './shell/tabs';
+import { TemplateEditorPage } from './workout/TemplateEditorPage';
 import { WorkoutPage } from './workout/WorkoutPage';
 
 const rootRoute = createRootRoute({ component: AppShell });
@@ -37,6 +38,7 @@ const routeTree = rootRoute.addChildren([
   page('/activities/$activityId', ActivityDetailPage),
   page('/statistics', StatisticsPage),
   page('/workout', WorkoutPage),
+  page('/templates/$templateId', TemplateEditorPage),
   page('/settings/profile', ProfilePage),
   page('/settings/household', HouseholdPage),
 ]);

@@ -93,3 +93,37 @@ test('a minimised workout can be resumed', async () => {
   await user.click(await screen.findByRole('button', { name: /Resume/ }));
   expect(screen.getByRole('button', { name: 'Finish' })).toBeVisible();
 });
+
+test('creates a template and starts a workout from it', async () => {
+  const templates: Record<string, unknown>[] = [];
+  const { server } = workoutServer();
+  server
+    .on('GET', '/templates', () => templates)
+    .on('PUT', '/templates/:id', ({ body }) => {
+      templates.push({ ...(body as object), lastPerformedAt: null });
+      return body;
+    });
+  const { user } = renderApp('/activities', server);
+
+  expect(await screen.findByText('No templates yet')).toBeVisible();
+  await user.click(screen.getByRole('button', { name: 'New template' }));
+  await user.type(await screen.findByLabelText('Name'), 'Upper');
+  await user.type(screen.getByLabelText('Notes'), 'After climbing');
+  await user.click(screen.getByRole('button', { name: 'Add exercises' }));
+  const picker = within(await screen.findByRole('dialog', { name: 'Add exercises' }));
+  await user.click(await picker.findByRole('button', { name: /^Bench Press \(Dumbbell\)/ }));
+  await user.click(picker.getByRole('button', { name: /^Add/ }));
+  const block = within(await screen.findByRole('region', { name: 'Bench Press (Dumbbell)' }));
+  await user.click(block.getByRole('button', { name: 'Add set' }));
+  await user.click(screen.getByRole('button', { name: 'Save template' }));
+
+  const card = await screen.findByRole('button', { name: /Upper/ });
+  expect(card).toHaveTextContent('4 × Bench Press (Dumbbell)');
+  expect(card).toHaveTextContent('After climbing');
+
+  await user.click(card);
+  await user.click(await screen.findByRole('button', { name: 'Start workout' }));
+  expect(screen.getByLabelText('Workout name')).toHaveValue('Upper');
+  expect(getActiveWorkout()?.templateId).toBe(templates[0]!.id);
+  expect(getActiveWorkout()?.exercises[0]?.sets).toHaveLength(4);
+});
