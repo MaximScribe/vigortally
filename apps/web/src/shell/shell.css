@@ -32,21 +32,29 @@
   padding-top: env(safe-area-inset-top);
 }
 
+.vt-avatar-button {
+  padding: 0;
+  border: 0;
+  border-radius: var(--vt-radius-pill);
+  background: none;
+  cursor: pointer;
+}
+
 .vt-avatar {
   display: grid;
   place-items: center;
   width: var(--vt-avatar-size);
   height: var(--vt-avatar-size);
-  padding: 0;
-  border: 1px solid var(--vt-color-border);
   border-radius: var(--vt-radius-pill);
-  background: var(--vt-color-surface-raised);
-  color: var(--vt-color-text-muted);
-  cursor: pointer;
+  background: var(--vt-color-accent);
+  color: var(--vt-color-on-accent);
+  font-size: var(--vt-text-body-small-size);
+  font-weight: 600;
+  user-select: none;
 }
 
-.vt-avatar:hover {
-  color: var(--vt-color-text);
+.vt-avatar-button:hover .vt-avatar {
+  background: var(--vt-color-accent-pressed);
 }
 
 /* ---- tab bar -------------------------------------------------------------- */
@@ -222,6 +230,11 @@
   width: 48px;
   height: 48px;
   flex: none;
+  font-size: var(--vt-text-body-size);
+}
+
+.vt-menu__signout {
+  margin-top: auto;
 }
 
 .vt-icon-button {

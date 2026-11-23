@@ -17,7 +17,7 @@ export function AppShell() {
   const closeMenu = useCallback(() => {
     setMenuOpen(false);
     // Give focus back to the profile button that opened the menu.
-    shellRef.current?.querySelector<HTMLButtonElement>('.vt-topbar .vt-avatar')?.focus();
+    shellRef.current?.querySelector<HTMLButtonElement>('.vt-topbar .vt-avatar-button')?.focus();
   }, []);
 
   return (
