@@ -76,3 +76,16 @@ a {
     animation-duration: 0.01ms !important;
   }
 }
+
+.vt-accent {
+  color: var(--vt-color-accent);
+}
+
+.vt-row--end {
+  align-items: flex-end;
+}
+
+.vt-row--end > .vt-icon-button {
+  flex: none;
+  margin: 0;
+}
