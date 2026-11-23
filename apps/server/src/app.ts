@@ -7,6 +7,7 @@ import { activityRoutes } from './routes/activities';
 import { authRoutes } from './routes/auth';
 import { kitchenRoutes, resolveRecipe } from './routes/kitchen';
 import { nutritionRoutes } from './routes/nutrition';
+import { statsRoutes } from './routes/stats';
 
 /** Endpoints reachable without signing in. Everything else requires a session. */
 const PUBLIC_ROUTES = new Set([
@@ -64,6 +65,7 @@ export function createApp(deps: AppDeps) {
   api.route('/', activityRoutes());
   api.route('/', nutritionRoutes(resolveRecipe));
   api.route('/', kitchenRoutes());
+  api.route('/', statsRoutes());
 
   // Hono ignores notFound() on mounted sub-apps, so unknown API paths use a catch-all.
   // Registered last so it never shadows real routes.
