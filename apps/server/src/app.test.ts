@@ -2,6 +2,7 @@ import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 import type { ServerInfo } from './app';
 import { API_VERSION, SERVER_VERSION } from './meta';
 import { createTestApp } from './test/app';
+import { setUpAdmin } from './test/client';
 
 let ctx: Awaited<ReturnType<typeof createTestApp>>;
 beforeAll(async () => {
@@ -30,8 +31,10 @@ describe('GET /api/info', () => {
   });
 });
 
-test('unknown API routes return a JSON 404', async () => {
-  const res = await ctx.app.request('/api/does-not-exist');
+test('unknown API routes need a session and then return a JSON 404', async () => {
+  expect((await ctx.app.request('/api/does-not-exist')).status).toBe(401);
+  const client = await setUpAdmin(ctx.app);
+  const res = await client.get('/api/does-not-exist');
   expect(res.status).toBe(404);
-  expect(await res.json()).toEqual({ error: 'not_found' });
+  expect(res.body).toEqual({ error: 'not_found' });
 });

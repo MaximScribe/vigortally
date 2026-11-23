@@ -10,7 +10,7 @@ import {
 import { and, count, eq, ne, sql } from 'drizzle-orm';
 import { Hono, type Context } from 'hono';
 import { deleteCookie, setCookie } from 'hono/cookie';
-import { requireAdmin, requireAuth } from '../auth/middleware';
+import { requireAdmin } from '../auth/middleware';
 import {
   createSession,
   deleteSession,
@@ -132,7 +132,7 @@ export function authRoutes() {
     return c.json(publicUser(toAuthUser(row)));
   });
 
-  app.post('/auth/logout', requireAuth, async (c) => {
+  app.post('/auth/logout', async (c) => {
     await deleteSession(c.var.db, c.var.session.id);
     deleteCookie(c, SESSION_COOKIE, { path: '/' });
     return c.body(null, 204);
@@ -140,11 +140,9 @@ export function authRoutes() {
 
   // ---- current user ---------------------------------------------------------
 
-  app.get('/me', requireAuth, (c) =>
-    c.json({ user: publicUser(c.var.user), profile: c.var.user.profile }),
-  );
+  app.get('/me', (c) => c.json({ user: publicUser(c.var.user), profile: c.var.user.profile }));
 
-  app.patch('/me/profile', requireAuth, async (c) => {
+  app.patch('/me/profile', async (c) => {
     const patch = await readBody(c, profileInput);
     const current = c.var.user.profile;
     const next = profileSchema.parse({
@@ -156,7 +154,7 @@ export function authRoutes() {
     return c.json(next);
   });
 
-  app.post('/me/password', requireAuth, async (c) => {
+  app.post('/me/password', async (c) => {
     const input = await readBody(c, changePasswordInput);
     const [row] = await c.var.db.select().from(users).where(eq(users.id, c.var.user.id));
     if (!row || !(await verifyPassword(input.currentPassword, row.passwordHash))) {
@@ -175,7 +173,7 @@ export function authRoutes() {
 
   // ---- household members ----------------------------------------------------
 
-  app.get('/users', requireAuth, async (c) => {
+  app.get('/users', async (c) => {
     const rows = await c.var.db
       .select()
       .from(users)
@@ -184,7 +182,7 @@ export function authRoutes() {
     return c.json(rows.map((row) => publicUser(toAuthUser(row))));
   });
 
-  app.post('/users', requireAuth, requireAdmin, async (c) => {
+  app.post('/users', requireAdmin, async (c) => {
     const input = await readBody(c, createUserInput);
     const [existing] = await c.var.db
       .select({ id: users.id })
@@ -205,7 +203,7 @@ export function authRoutes() {
     return c.json(publicUser(toAuthUser(row!)), 201);
   });
 
-  app.delete('/users/:id', requireAuth, requireAdmin, async (c) => {
+  app.delete('/users/:id', requireAdmin, async (c) => {
     const id = c.req.param('id');
     if (id === c.var.user.id) fail(400, 'cannot_delete_self', "You can't delete your own account");
     const deleted = await c.var.db

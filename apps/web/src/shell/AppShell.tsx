@@ -1,4 +1,4 @@
-import { Outlet } from '@tanstack/react-router';
+import { Outlet, useRouterState } from '@tanstack/react-router';
 import { useCallback, useRef, useState } from 'react';
 import { SideMenu } from './SideMenu';
 import { TabBar } from './TabBar';
@@ -13,12 +13,16 @@ import './shell.css';
 export function AppShell() {
   const [menuOpen, setMenuOpen] = useState(false);
   const shellRef = useRef<HTMLDivElement>(null);
+  // Focused screens (the workout logger) take over the whole window.
+  const fullScreen = useRouterState({ select: (s) => s.location.pathname.startsWith('/workout') });
 
   const closeMenu = useCallback(() => {
     setMenuOpen(false);
     // Give focus back to the profile button that opened the menu.
     shellRef.current?.querySelector<HTMLButtonElement>('.vt-topbar .vt-avatar-button')?.focus();
   }, []);
+
+  if (fullScreen) return <Outlet />;
 
   return (
     <div className="vt-shell" ref={shellRef}>
