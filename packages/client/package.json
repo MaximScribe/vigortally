@@ -13,6 +13,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@vigortally/core": "*",
     "@vigortally/schema": "*"
   }
 }
