@@ -11,6 +11,7 @@ describe('loadConfig', () => {
       logLevel: 'info',
       databaseUrl: undefined,
       dataDir: './data',
+      webDir: undefined,
     });
   });
 

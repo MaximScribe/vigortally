@@ -1,3 +1,5 @@
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { serve } from '@hono/node-server';
 import { createApp } from './app';
 import { ConfigError, loadConfig, type Config } from './config';
@@ -5,6 +7,7 @@ import { openDatabase } from './db/client';
 import { findMigrationsFolder } from './db/migrations';
 import { createLogger } from './logger';
 import { API_VERSION, SERVER_VERSION } from './meta';
+import { mountWebApp } from './web';
 
 function readConfig(): Config {
   try {
@@ -32,6 +35,11 @@ async function start() {
   await database.migrate();
 
   const app = createApp({ config, database, log, now: () => new Date(), fetch: globalThis.fetch });
+  // apps/server/{src,dist} -> apps/web/dist
+  const webDir =
+    config.webDir ?? resolve(dirname(fileURLToPath(import.meta.url)), '../../web/dist');
+  if (mountWebApp(app, webDir)) log.info('Serving the web app', { webDir });
+  else log.warn('Web app not found; only the API is served', { webDir });
 
   const server = serve({ fetch: app.fetch, hostname: config.host, port: config.port }, (info) => {
     log.info('VigorTally server listening', {
