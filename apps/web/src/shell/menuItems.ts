@@ -38,5 +38,11 @@ export const menuItems: readonly MenuItem[] = [
     description: 'Strava, Health Connect, imports',
     icon: Plug,
   },
-  { id: 'data', label: 'Export & server', description: 'Your data, server info', icon: Download },
+  {
+    id: 'data',
+    label: 'Export & server',
+    description: 'Your data, server info',
+    icon: Download,
+    to: '/settings/data',
+  },
 ];

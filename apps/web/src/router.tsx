@@ -35,6 +35,7 @@ const lazy = {
   profile: lazyRouteComponent(() => import('./pages/settings/ProfilePage'), 'ProfilePage'),
   household: lazyRouteComponent(() => import('./pages/settings/HouseholdPage'), 'HouseholdPage'),
   devices: lazyRouteComponent(() => import('./pages/settings/DevicesPage'), 'DevicesPage'),
+  data: lazyRouteComponent(() => import('./pages/settings/DataPage'), 'DataPage'),
 };
 
 const indexRoute = createRoute({
@@ -57,6 +58,7 @@ const routeTree = rootRoute.addChildren([
   page('/settings/profile', lazy.profile),
   page('/settings/household', lazy.household),
   page('/settings/devices', lazy.devices),
+  page('/settings/data', lazy.data),
 ]);
 
 export function createAppRouter(history: RouterHistory = createBrowserHistory()) {
