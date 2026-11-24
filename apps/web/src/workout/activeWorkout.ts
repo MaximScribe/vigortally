@@ -1,20 +1,12 @@
-import type { SetType, WorkoutExercise, WorkoutSet } from '@vigortally/schema';
+import { defaultWorkoutName, type WorkoutDraft } from '@vigortally/core';
+import type { WorkoutExercise, WorkoutSet } from '@vigortally/schema';
+
+export { completedWorkout, emptySet, nextSetType } from '@vigortally/core';
 import { useSyncExternalStore } from 'react';
 import { newId } from '../lib/ids';
 
 /** The workout currently being logged. Lives on this device until it is finished. */
-export interface ActiveWorkout {
-  id: string;
-  name: string;
-  templateId: string | null;
-  startedAt: string;
-  notes: string;
-  exercises: WorkoutExercise[];
-  /** Rest timer: epoch ms when the current rest ends, or null. */
-  restEndsAt: number | null;
-  /** Rest length started after each completed set, in seconds (0 = off). */
-  restSeconds: number;
-}
+export type ActiveWorkout = WorkoutDraft;
 
 const STORAGE_KEY = 'vigortally.activeWorkout';
 const listeners = new Set<() => void>();
@@ -58,26 +50,15 @@ export function getActiveWorkout(): ActiveWorkout | null {
   return current;
 }
 
-export const emptySet = (type: SetType = 'normal'): WorkoutSet => ({
-  type,
-  weightKg: null,
-  reps: null,
-  rpe: null,
-  done: false,
-});
-
 export function startWorkout(options: {
   name?: string;
   templateId?: string | null;
   exercises?: WorkoutExercise[];
   restSeconds?: number;
 }): ActiveWorkout {
-  const hour = new Date().getHours();
   const workout: ActiveWorkout = {
     id: newId(),
-    name:
-      options.name ??
-      (hour < 11 ? 'Morning workout' : hour < 17 ? 'Afternoon workout' : 'Evening workout'),
+    name: options.name ?? defaultWorkoutName(),
     templateId: options.templateId ?? null,
     startedAt: new Date().toISOString(),
     notes: '',
@@ -117,26 +98,4 @@ export function updateSet(
     ...e,
     sets: e.sets.map((s, i) => (i === setIndex ? { ...s, ...patch } : s)),
   }));
-}
-
-const setTypeOrder: SetType[] = ['normal', 'warmup', 'drop', 'failure'];
-export function nextSetType(type: SetType): SetType {
-  return setTypeOrder[(setTypeOrder.indexOf(type) + 1) % setTypeOrder.length]!;
-}
-
-/**
- * The workout as it gets saved: only completed sets, only exercises that have one.
- */
-export function completedWorkout(workout: ActiveWorkout, finishedAt: Date) {
-  return {
-    id: workout.id,
-    name: workout.name.trim() || 'Workout',
-    templateId: workout.templateId,
-    startedAt: workout.startedAt,
-    finishedAt: finishedAt.toISOString(),
-    notes: workout.notes.trim(),
-    exercises: workout.exercises
-      .map((e) => ({ ...e, sets: e.sets.filter((s) => s.done) }))
-      .filter((e) => e.sets.length > 0),
-  };
 }

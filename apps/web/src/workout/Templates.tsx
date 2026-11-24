@@ -1,4 +1,4 @@
-import { exerciseDisplayName } from '@vigortally/core';
+import { exerciseDisplayName, exercisesFromTemplate } from '@vigortally/core';
 import type { Template } from '@vigortally/schema';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
@@ -9,7 +9,7 @@ import { Button, ErrorMessage } from '../components/forms';
 import { EmptyState, Section } from '../components/Page';
 import { Sheet } from '../components/Sheet';
 import { formatDay } from '../lib/format';
-import { emptySet, getActiveWorkout, startWorkout } from './activeWorkout';
+import { getActiveWorkout, startWorkout } from './activeWorkout';
 import { useExercises } from './ExercisePicker';
 
 /** "My templates" on the Activities page. */
@@ -25,10 +25,7 @@ export function Templates() {
     startWorkout({
       name: template.name,
       templateId: template.id,
-      exercises: template.exercises.map((e) => ({
-        ...e,
-        sets: e.sets.map((s) => ({ ...emptySet(s.type), weightKg: s.weightKg, reps: s.reps })),
-      })),
+      exercises: exercisesFromTemplate(template.exercises),
     });
     void navigate({ to: '/workout' });
   }

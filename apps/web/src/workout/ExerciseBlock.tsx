@@ -1,4 +1,10 @@
-import { displayWeight, exerciseDisplayName, inputWeightToKg, setLabels } from '@vigortally/core';
+import {
+  completeSet,
+  displayWeight,
+  exerciseDisplayName,
+  inputWeightToKg,
+  setLabels,
+} from '@vigortally/core';
 import type { Exercise, UnitSystem, WorkoutExercise, WorkoutSet } from '@vigortally/schema';
 import { Check, MoreVertical } from 'lucide-react';
 import { useState } from 'react';
@@ -64,13 +70,7 @@ export function ExerciseBlock({
   function toggleDone(setIndex: number) {
     const set = entry.sets[setIndex]!;
     if (set.done) return changeSet(setIndex, { done: false });
-    // Like a paper log: checking an empty set takes last time's numbers.
-    const prev = previous?.[setIndex];
-    changeSet(setIndex, {
-      done: true,
-      weightKg: set.weightKg ?? prev?.weightKg ?? null,
-      reps: set.reps ?? prev?.reps ?? null,
-    });
+    changeSet(setIndex, completeSet(set, previous?.[setIndex]));
     updateWorkout((w: ActiveWorkout) => ({
       ...w,
       restEndsAt: w.restSeconds > 0 ? Date.now() + w.restSeconds * 1000 : null,
