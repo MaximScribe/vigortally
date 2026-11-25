@@ -15,7 +15,13 @@ function scrypt(password: string, salt: Buffer, keylen: number, options: ScryptO
 }
 
 const KEY_LENGTH = 64;
-const DEFAULT_COST = { N: 2 ** 15, r: 8, p: 1 };
+/**
+ * N = 2^15 costs ~32 MB and a noticeable moment per hash: right for real logins, too
+ * heavy when hundreds of tests hash in parallel. Tests (NODE_ENV=test, set by Vitest)
+ * use a cheap cost; the stored format records N, so verification works either way.
+ */
+const DEFAULT_COST =
+  process.env.NODE_ENV === 'test' ? { N: 2 ** 10, r: 8, p: 1 } : { N: 2 ** 15, r: 8, p: 1 };
 
 /** Stored format: `scrypt$N$r$p$<salt base64>$<hash base64>`. */
 export async function hashPassword(password: string, cost = DEFAULT_COST): Promise<string> {
