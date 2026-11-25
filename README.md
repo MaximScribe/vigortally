@@ -109,36 +109,98 @@ Recipes, templates, settings and the dashboard layout are edited in the web app.
 
 ## Self-hosting
 
-You need Docker. VigorTally is one container that serves both the API and the web app.
+You need Docker with the Compose plugin (`docker compose version` should print a version). VigorTally is one container that serves both the API and the web app. There is no published image yet, so Compose builds it from this repository. The first build takes a few minutes.
 
-### Quick start (built-in database)
+### Run it with Docker Compose
 
-```bash
-git clone https://github.com/MaximScribe/vigortally.git
-cd vigortally/docker
-docker compose up -d
+1. **Get the code.**
+
+   ```bash
+   git clone https://github.com/MaximScribe/vigortally.git
+   cd vigortally/docker
+   ```
+
+2. **Optional: configure it.** Copy the example settings and set `PUBLIC_URL` to the address your phone will use:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   Without a `.env`, VigorTally runs on port 8080 in UTC, and you can still pair the app by typing in the server address.
+
+3. **Start it.**
+
+   ```bash
+   docker compose up -d --build
+   ```
+
+4. **Check that it's running.** `docker compose ps` shows `healthy` after a few seconds, and `docker compose logs -f` follows the logs.
+
+5. **Open `http://<your-server>:8080`** and create the admin account. The first account becomes the admin.
+
+This is the whole compose file ([`docker/compose.yml`](docker/compose.yml)):
+
+```yaml
+name: vigortally
+
+services:
+  vigortally:
+    image: vigortally/vigortally:latest
+    build:
+      context: ..
+    pull_policy: build
+    container_name: vigortally
+    restart: unless-stopped
+    ports:
+      - '${VIGORTALLY_PORT:-8080}:8080'
+    environment:
+      PUBLIC_URL: ${PUBLIC_URL:-}
+      TZ: ${TZ:-UTC}
+    volumes:
+      - vigortally-data:/data
+
+volumes:
+  vigortally-data:
 ```
 
-Open `http://<your-server>:8080` and create the admin account. Data is stored in `docker/data`. With no `DATABASE_URL` set, VigorTally uses an embedded PostgreSQL (PGlite) in that folder.
+With no `DATABASE_URL` set, VigorTally uses an embedded PostgreSQL (PGlite) stored in the `vigortally-data` volume.
+
+| Task       | Command (in `vigortally/docker`)                   |
+| ---------- | -------------------------------------------------- |
+| Update     | `git pull && docker compose up -d --build`         |
+| Stop       | `docker compose down` (your data stays)            |
+| Logs       | `docker compose logs -f vigortally`                |
+| Delete all | `docker compose down -v` (also deletes your data!) |
 
 ### With PostgreSQL
 
-For several users, or if you already run Postgres:
+For several users, or if you already run Postgres, use the second compose file. It starts a `postgres:17` container next to VigorTally. Set `POSTGRES_PASSWORD` in `.env` first:
 
 ```bash
-cd vigortally/docker
-POSTGRES_PASSWORD=change-me docker compose -f compose.postgres.yml up -d
+docker compose -f compose.postgres.yml up -d --build
 ```
+
+To use a Postgres server you already run instead, keep `compose.yml` and add `DATABASE_URL: postgres://user:password@host:5432/vigortally` under `environment`.
 
 ### Configuration
 
-| Variable       | Default | Meaning                                                                                                     |
-| -------------- | ------- | ----------------------------------------------------------------------------------------------------------- |
-| `PUBLIC_URL`   | –       | The address your devices use, e.g. `https://vigortally.your-tailnet.ts.net`. Goes into the pairing QR code. |
-| `DATABASE_URL` | –       | `postgres://…` for an external database. Without it, the embedded database in `DATA_DIR` is used.           |
-| `DATA_DIR`     | `/data` | Where the embedded database lives.                                                                          |
-| `PORT`         | `8080`  | HTTP port inside the container.                                                                             |
-| `LOG_LEVEL`    | `info`  | `debug`, `info`, `warn` or `error`. Logs are one JSON object per line.                                      |
+These go in `docker/.env`:
+
+| Variable            | Default | Meaning                                                                                                     |
+| ------------------- | ------- | ----------------------------------------------------------------------------------------------------------- |
+| `PUBLIC_URL`        | –       | The address your devices use, e.g. `https://vigortally.your-tailnet.ts.net`. Goes into the pairing QR code. |
+| `VIGORTALLY_PORT`   | `8080`  | The port on the host.                                                                                       |
+| `TZ`                | `UTC`   | The server's time zone, e.g. `Europe/Berlin`.                                                               |
+| `POSTGRES_PASSWORD` | –       | Only for `compose.postgres.yml`: the database password.                                                     |
+
+The container also reads these, set under `environment` in the compose file:
+
+| Variable       | Default | Meaning                                                                                           |
+| -------------- | ------- | ------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL` | –       | `postgres://…` for an external database. Without it, the embedded database in `DATA_DIR` is used. |
+| `DATA_DIR`     | `/data` | Where the embedded database lives.                                                                |
+| `PORT`         | `8080`  | HTTP port inside the container.                                                                   |
+| `LOG_LEVEL`    | `info`  | `debug`, `info`, `warn` or `error`. Logs are one JSON object per line.                            |
 
 Database migrations run automatically on start, and the container has a healthcheck on `/api/health`. The image is tested on `amd64`; `docker buildx build --platform linux/arm64 .` builds it for a Raspberry Pi or ARM NAS (not yet tested on ARM).
 
@@ -150,8 +212,17 @@ Any other route works too: a reverse proxy with HTTPS (Caddy, Traefik, Nginx Pro
 
 ### Backups
 
-- **Built-in database:** stop the container and copy `docker/data`.
-- **PostgreSQL:** use `pg_dump`.
+- **Built-in database:** stop the container and archive the volume:
+
+  ```bash
+  docker compose stop
+  docker run --rm -v vigortally_vigortally-data:/data -v "$PWD":/backup alpine tar czf /backup/vigortally-data.tgz -C /data .
+  docker compose start
+  ```
+
+  `docker volume ls` lists the volume.
+
+- **PostgreSQL:** `docker compose -f compose.postgres.yml exec db pg_dump -U vigortally vigortally > vigortally.sql`.
 - **Any user:** **Profile → Export & server → Download my data** gives a JSON file with everything they logged.
 
 ### Building the companion app
