@@ -14,3 +14,6 @@ data
 pg
 Dockerfile
 .dockerignore
+
+# The companion app is built with Expo, not in the server image.
+apps/mobile

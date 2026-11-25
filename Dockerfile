@@ -13,7 +13,9 @@ WORKDIR /app
 COPY . .
 # Only the server and web workspaces (and the shared packages they use) are installed;
 # the companion app's toolchain is not needed here.
-RUN npm ci --workspace=@vigortally/server --workspace=@vigortally/web --include-workspace-root \
+RUN npm config set fetch-retries 5 \
+ && npm config set fetch-retry-mintimeout 20000 \
+ && npm ci --workspace=@vigortally/server --workspace=@vigortally/web --include-workspace-root \
  && npm run build --workspace=@vigortally/web \
  && npm run build --workspace=@vigortally/server
 
@@ -30,7 +32,9 @@ ENV NODE_ENV=production \
 # Only the production dependencies of the server.
 COPY --from=build /app/package.json /app/package-lock.json ./
 COPY --from=build /app/apps/server/package.json ./apps/server/
-RUN npm ci --workspace=@vigortally/server --omit=dev --ignore-scripts \
+RUN npm config set fetch-retries 5 \
+ && npm config set fetch-retry-mintimeout 20000 \
+ && npm ci --workspace=@vigortally/server --omit=dev --ignore-scripts \
  && npm cache clean --force
 
 COPY --from=build /app/apps/server/dist ./apps/server/dist
