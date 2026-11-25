@@ -50,11 +50,12 @@ Keep commits small and focused. Each commit should build.
 
 ```
 apps/
-  server/     API, sync, background jobs, serves the web build in production
+  server/     API, migrations, serves the web build in production
   web/        React web app
   mobile/     Expo (React Native) companion app
 packages/
-  core/       pure domain logic (nutrition math, units, 1RM, scheduling)
+  client/     typed API client and the offline outbox
+  core/       pure domain logic (nutrition math, units, 1RM, shopping list, presets)
   schema/     shared Zod schemas and API types
   ui/         design tokens shared by web and mobile
 Dockerfile    server image (amd64 + arm64)
@@ -64,13 +65,15 @@ docs/         documentation
 
 ## Development
 
-Requirements: Node.js 22 or newer, npm 10 or newer, Docker (for PostgreSQL).
+Requirements: Node.js 22 or newer and npm 10 or newer. Docker is only needed to build the image or try the PostgreSQL setup; development and tests use an embedded database.
 
 ```bash
 npm install           # installs every workspace
 
 npm run dev:server    # API on http://localhost:8080
 npm run dev:web       # web app on http://localhost:5173 (proxies /api to the server)
+npm run start -w @vigortally/mobile   # companion app (Expo)
+npm run db:generate -w @vigortally/server   # SQL migration after changing db/schema.ts
 
 npm test              # all tests (Vitest, every workspace)
 npm run typecheck     # TypeScript in every workspace

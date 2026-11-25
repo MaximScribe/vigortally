@@ -4,224 +4,218 @@
 
 ### Eat, cook, train and see it all, in one app you host yourself.
 
-VigorTally brings together nutrition and weight tracking, a kitchen with recipes, meal schedules and a smart shopping list, tracking for all your sports with imports from the apps you already use, and a dashboard you build yourself. It runs in Docker on your homelab, and the companion app connects to it with a QR code.
+VigorTally brings together nutrition and weight tracking, a kitchen with recipes, a meal planner and a shopping list that keeps itself up to date, a set-and-rep workout logger alongside all your other sports, and a dashboard you build yourself. It runs as one Docker container on your homelab, and the companion app connects to it with a QR code.
 
 <br />
 
-![Status](https://img.shields.io/badge/Status-planning-F59E0B?style=for-the-badge)
+![Version](https://img.shields.io/badge/Version-1.0.0-3a95e9?style=for-the-badge)
 &nbsp;
-![Docker](https://img.shields.io/badge/Docker-planned-2496ED?style=for-the-badge)
+![Docker](https://img.shields.io/badge/Docker-ready-2496ED?style=for-the-badge)
 &nbsp;
 [![License](https://img.shields.io/badge/License-MIT-6B7280?style=for-the-badge)](LICENSE)
 
 </div>
 
-> [!NOTE]
-> VigorTally is in the **planning stage**. Nothing is ready to install yet. This README describes what the project aims to be.
-
 ---
 
 ## Why
 
-Today, keeping track of your fitness usually means a calorie tracker, a recipe manager, a workout logger, a running app, a ski tracker and a climbing logbook. None of them share data, and each one keeps your data on someone else's server.
+Today, keeping track of your fitness usually means a calorie tracker, a recipe manager, a workout logger, a running app and a climbing logbook. None of them share data, and each one keeps your data on someone else's server.
 
-VigorTally brings all of it together on a server you control:
+VigorTally brings them together on a server you control:
 
-- **Plan your meals and get your shopping list for free.** VigorTally knows which recipes are scheduled, compares them with what you've already eaten, and keeps the list of basics you need up to date.
-- **Keep every sport in one place.** Lifting, running, skiing and bouldering are logged by hand or imported from the apps you already use.
-- **Build your own dashboard.** Chart any metric against any other, such as your weight trend against your weekly running distance and protein intake.
+- **Plan your meals and get your shopping list for free.** VigorTally knows which recipes are scheduled, compares them with what you've bought and eaten, and keeps the list of basics up to date.
+- **Log your lifting the way you're used to.** Templates, a SET / PREVIOUS / KG / REPS table, warm-up, drop and failure sets, and a rest timer.
+- **Keep every sport in one place.** Use presets for running, cycling, swimming, hiking, skiing and bouldering, or define your own activity with its own fields.
+- **Build your own dashboard.** Chart any metric: weight trend, calories, training volume, estimated 1RM, distance and more.
 
 ## The app
 
-The companion app and the web app share the same layout. There are three tabs, with **Activities** in the middle. Your profile picture in the top-right corner opens the menu.
+The web app and the companion app share the same layout. There are three tabs, with **Activities** in the middle, and your profile picture in the top-right corner opens the side menu.
 
 ```
 ┌───────────────────────────────────────┐
-│  VigorTally                     (👤)  │  ← opens the side menu
-│                                       │
-│                                       │
+│                                 (TT)  │  ← side menu
+│  Activities                           │
 │                                       │
 ├───────────────────────────────────────┤
 │   🥗 Nutrition  🏃 Activities  📊 Stats │
 └───────────────────────────────────────┘
 ```
 
-On desktop, the bottom bar turns into a sidebar.
-
-### 👤 Side menu
-
-Tapping your profile picture slides out a menu from the right. It covers the whole screen when the phone is upright, and roughly the same width on the right side when it's sideways or on a larger screen. It holds:
-
-- Profile and goals (targets, units, preferred day types)
-- Settings (theme, notifications, privacy)
-- Household and shared members
-- Connected devices (pair the companion app, revoke devices)
-- Integrations (Strava, Health Connect / Apple Health, imports)
-- Export, server info and about
+On desktop, the bottom bar becomes a sidebar. The side menu covers the whole screen on an upright phone and keeps that width when the phone is sideways.
 
 ### 🥗 Nutrition
 
-**Today**
+- **Macro ring**: a donut of where today's calories came from, with calories eaten and left in the middle and a labelled bar per macro. The colours were checked to be distinguishable with colour blindness.
+- **Food diary** by meal. You can search your household's foods or pick a recent one. Barcodes are looked up on [Open Food Facts](https://world.openfoodfacts.org/) through your server and cached there. You can also quick-add calories and macros, or create a food. Each entry stores a snapshot of its nutrients, so editing a food later never changes your history.
+- **Water** with one-tap buttons, and **weigh-ins** (one per day) next to your intake.
+- Daily targets for calories, protein, carbs, fat and water, set under Profile & goals.
 
-- Macro ring: a pie/donut chart of protein, carbs and fat compared with your targets
-- Calories eaten, left and burned, plus fiber, sugar, sodium and micronutrients on demand
-- Targets that can change by day type (training or rest day)
+### 🍳 Kitchen (pull-down panel in Nutrition)
 
-**Log**
-
-- Scan a barcode with the camera (backed by [Open Food Facts](https://world.openfoodfacts.org/)), search the food database, or add a food by hand
-- Quick-add calories and macros, and copy a meal or a whole day
-- Track water with one tap
-- **Weigh-ins**: body weight with a smoothed trend line, right next to your intake
-
-**🍳 Kitchen** (a pull-down panel inside Nutrition)
-
-- **Today's meal**: what's scheduled to cook today, with the recipe a tap away
-- **Recipe book**: your recipes, imported from a URL (schema.org) or written by hand, with scaling, tags and nutrition per serving worked out automatically
-- **Recipe scheduler**: put recipes on days, or set up a repeating rotation or meal-prep cycle (for example "cook 4 portions of chili every Sunday")
-- **Shopping list**: the basics needed for what's coming up on the schedule, updated as you eat (see below)
-- **Shopping forecast**: an estimate of how many days until you need to shop again
+- **Today**: what's planned for today, logged to your diary in one tap.
+- **Recipes**: ingredients are linked to foods, nutrition per serving is worked out automatically, and recipes can be imported from a URL (schema.org recipe data, which most recipe sites publish).
+- **Plan**: a 7-day planner. A meal can repeat weekly for meal-prep rotations.
+- **Shopping**: the list worked out from your plan, plus a forecast of when you need to shop next.
 
 #### How the shopping list works
 
-VigorTally doesn't make you count what's in your cupboards. It works the list out from data you already enter:
+You never count your cupboards. VigorTally works it out from what you already enter:
 
-1. **Plan.** The scheduler knows which recipes are coming up, so it knows which ingredients they need and how much.
-2. **Buy.** Ticking items off the shopping list records them as bought.
-3. **Eat.** When you log foods and recipes in the nutrition tracker, those ingredients count as used up.
-4. **Work out the gap.** The difference between what's planned and what's been bought and eaten becomes the list of what's missing. The forecast shows when the planned meals will no longer be covered.
+1. **Plan.** The planner knows which ingredients the meals up to your next shopping day need.
+2. **Buy.** Ticking an item off the list records it as bought.
+3. **Eat.** Foods and recipes logged in the diary by anyone in the household count as used.
+4. **Gap.** What's planned minus what's assumed to be at home becomes the list. The forecast shows how long the planned meals are covered.
 
-The list covers the **basics for your scheduled recipes and meal prep**. Anything extra you buy or eat outside the plan doesn't break it, and you can always add items to the list by hand.
+The assumed stock is a running balance that never goes below zero, so food eaten before you bought it, or extra food eaten off the plan, can't cancel out a purchase. Anything else you need can be added to the list by hand.
 
 ### 🏃 Activities
 
-An overview of every sport you do. Pick from **presets** (strength training, running, cycling, swimming, skiing/snowboarding, bouldering, hiking, …) or create your own **custom activity** with the fields you care about.
-
-- **Strength training**: a set-and-rep workout logger with routines and templates, rest timer, RPE/RIR, warm-up, drop and failure sets, personal records, estimated 1RM and a plate calculator
-- **Endurance and outdoor sports**: distance, duration, pace, elevation and heart rate, imported automatically or entered by hand
-- **Bouldering and climbing**: sends, grades, attempts and boards
-- **Custom activities**: you define the metrics, for example "rounds" and "intensity" for boxing
-
-**Integrations (planned)**
-
-| Source                        | Activities                                                                                      | How                                                                   |
-| ----------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| Strava                        | Running, cycling, swimming, …                                                                   | OAuth API                                                             |
-| Health Connect / Apple Health | Anything that other apps write there, such as Slopes ski days, watch workouts, steps and weight | Read by the companion app                                             |
-| Slopes                        | Skiing / snowboarding                                                                           | Through Apple Health / Health Connect, or by importing an export file |
-| theCrag                       | Climbing logbook                                                                                | API (needs an API key)                                                |
-| Kilter Board                  | Board climbing                                                                                  | To be researched (there is no official public API)                    |
-| GPX / FIT / CSV files         | Anything                                                                                        | Upload                                                                |
+- **Strength training** with a set-and-rep logger in the style of a paper log:
+  - Templates (with supersets and notes) and quick start
+  - A PREVIOUS column with your last numbers. Ticking an empty set copies them.
+  - Warm-up, drop and failure sets, and a rest timer after every set
+  - Estimated 1RM, and the volume of each workout
+- **Every other sport**:
+  - Presets for running, cycling, swimming, hiking, skiing/snowboarding, bouldering and yoga
+  - Custom activities with your own fields (numbers with units, distances, durations, text)
+  - Sessions logged with date, duration and notes
 
 ### 📊 Statistics
 
-A **dashboard you put together yourself** from widgets. Any metric VigorTally tracks can be charted:
+You build the dashboard from widgets. Each widget charts a metric as a **line**, **bars** or a **big number**, over a range from 7 days to a year, grouped by day, week or month. The metrics are:
 
-- Number of sessions and time spent per sport, and a list of all your activities
-- Stats for a single sport: volume and 1RM progress per lift, running pace and distance, ski days and vertical metres, the grade pyramid for climbing
-- Nutrition: calories and macros over time, how often you hit your targets
-- Weight trend, and weight against calorie intake
+- Body weight, calories, protein, carbs, fat and water
+- Workouts, training volume, and the estimated 1RM of a chosen exercise
+- Sessions, active time and distance, across all activities or for one
 
-You can choose line, bar, number, heatmap or ring widgets, set the time range and filters, and arrange them by dragging. Layouts sync between the web and the companion app.
+Every chart shows the value under your cursor or finger and has a "Show data" table. New accounts start with a useful default dashboard.
 
-## Design
+### 📱 Companion app (Android and iOS)
 
-The look is **sleek, modern and minimal**. The app is dark first with a light theme available, uses one accent color, and puts content first with big readable numbers. It needs to work fast with one hand between sets or in the kitchen.
+- **Pairing:** scan the QR code from **Profile → Connected devices → Connect app**, or type in the server address and code.
+- **Offline first:**
+  - Workouts, diary entries, water and weigh-ins are queued on the phone and sent once the server is reachable.
+  - The badge on your profile picture shows changes that are still waiting.
+  - Every write uses a client-generated ID, so retries never create duplicates.
+- **Screens:**
+  - The workout logger, with haptic feedback when a rest ends
+  - Nutrition, with a camera barcode scanner
+  - Today's planned meals
+  - The same dashboard as the web app
+
+Recipes, templates, settings and the dashboard layout are edited in the web app.
 
 ## Self-hosting
 
-VigorTally runs in Docker on your homelab. It needs one VigorTally container and PostgreSQL. Images will be built for both `amd64` and `arm64`, so a Raspberry Pi works too.
+You need Docker. VigorTally is one container that serves both the API and the web app.
 
-_Coming soon._ The goal is a setup like this:
+### Quick start (built-in database)
 
-```yaml
-services:
-  vigortally:
-    image: vigortally/vigortally:latest
-    ports: ['8080:8080']
-    environment:
-      DATABASE_URL: postgres://vigortally:vigortally@db:5432/vigortally
-      PUBLIC_URL: https://vigortally.your-tailnet.ts.net
-    volumes: ['./data:/data']
-  db:
-    image: postgres:17
-    environment:
-      POSTGRES_USER: vigortally
-      POSTGRES_PASSWORD: vigortally
-    volumes: ['./pg:/var/lib/postgresql/data']
+```bash
+git clone https://github.com/MaximScribe/vigortally.git
+cd vigortally/docker
+docker compose up -d
 ```
+
+Open `http://<your-server>:8080` and create the admin account. Data is stored in `docker/data`. With no `DATABASE_URL` set, VigorTally uses an embedded PostgreSQL (PGlite) in that folder.
+
+### With PostgreSQL
+
+For several users, or if you already run Postgres:
+
+```bash
+cd vigortally/docker
+POSTGRES_PASSWORD=change-me docker compose -f compose.postgres.yml up -d
+```
+
+### Configuration
+
+| Variable       | Default | Meaning                                                                                                     |
+| -------------- | ------- | ----------------------------------------------------------------------------------------------------------- |
+| `PUBLIC_URL`   | –       | The address your devices use, e.g. `https://vigortally.your-tailnet.ts.net`. Goes into the pairing QR code. |
+| `DATABASE_URL` | –       | `postgres://…` for an external database. Without it, the embedded database in `DATA_DIR` is used.           |
+| `DATA_DIR`     | `/data` | Where the embedded database lives.                                                                          |
+| `PORT`         | `8080`  | HTTP port inside the container.                                                                             |
+| `LOG_LEVEL`    | `info`  | `debug`, `info`, `warn` or `error`. Logs are one JSON object per line.                                      |
+
+Database migrations run automatically on start, and the container has a healthcheck on `/api/health`. The image is tested on `amd64`; `docker buildx build --platform linux/arm64 .` builds it for a Raspberry Pi or ARM NAS (not yet tested on ARM).
 
 ### Reaching your server
 
-The **recommended** setup is [Tailscale](https://tailscale.com/). Put your server on your tailnet, use `tailscale serve` for automatic HTTPS, and install Tailscale on your phone. Your server then never has to be exposed to the internet.
+The recommended setup is [Tailscale](https://tailscale.com/). Put the server on your tailnet, use `tailscale serve` for automatic HTTPS, install Tailscale on your phone, and set `PUBLIC_URL` to the tailnet address. Your server never has to be exposed to the internet.
 
-Any other route works too: a reverse proxy with HTTPS (Caddy, Traefik, Nginx Proxy Manager), WireGuard, or a tunnel. VigorTally only needs a URL your devices can reach. Plain HTTP is allowed only on LAN addresses, and shows a warning.
+Any other route works too: a reverse proxy with HTTPS (Caddy, Traefik, Nginx Proxy Manager), WireGuard, or a tunnel. The companion app warns you if you use plain HTTP outside a private network.
 
-### Connecting the companion app
+### Backups
 
-1. Open the web app, tap your profile picture and go to **Connected devices → Connect app**.
-2. Scan the QR code with the companion app. It contains your server URL and a pairing code that can be used once and expires after a short time.
-3. That's it. The app gets its own device token, which you can revoke at any time.
+- **Built-in database:** stop the container and copy `docker/data`.
+- **PostgreSQL:** use `pg_dump`.
+- **Any user:** **Profile → Export & server → Download my data** gives a JSON file with everything they logged.
 
-You can also type in the server URL and log in by hand.
+### Building the companion app
 
-The companion app is **offline first**. You can log a workout in a basement gym or a meal on a mountain, and it syncs once it can reach your server again.
+The app is in `apps/mobile` (Expo SDK 58). For development, run `npm install` at the repository root, then `npm run start -w @vigortally/mobile`. Open it in a development build, or build an APK or IPA with [EAS Build](https://docs.expo.dev/build/introduction/). Store releases are planned.
 
-### Privacy
+## Privacy and security
 
-- Your data stays on your server, with no telemetry
-- Multiple users and households (recipes, schedules and shopping lists can be shared)
-- Optional single sign-on with OIDC (Authentik, Authelia, Keycloak and others)
-- Export everything as JSON/CSV
+- Your data stays on your server, with no telemetry. The only outside requests are barcode lookups to Open Food Facts (only the barcode is sent) and pages you import recipes from.
+- Passwords are hashed with scrypt, and session and device tokens are stored only as hashes.
+- Web sessions use an HttpOnly cookie. Phones get their own device token, which you can revoke from **Connected devices**.
+- Failed logins and pairing attempts are rate-limited. Pairing codes work once and expire after 10 minutes.
+- Every API route requires a session except an explicit list of public endpoints. Users can only read or change their own records and their household's shared ones.
 
-## Architecture (draft)
+## Architecture
 
 ```
-┌───────────────┐        ┌───────────────────────────────┐
-│ Web app       │───────▶│ VigorTally server             │──▶ PostgreSQL
-└───────────────┘ HTTPS  │  API · sync · background jobs │──▶ File storage (disk / S3)
-┌───────────────┐        │  integrations · web app       │──▶ Open Food Facts (cached)
-│ Companion app │───────▶│                               │──▶ Strava · theCrag · …
-│ local DB      │  sync  └───────────────────────────────┘
-│ Health bridge │
+┌───────────────┐        ┌──────────────────────────────────┐
+│ Web app       │───────▶│ VigorTally server (Node, Hono)   │──▶ PostgreSQL or embedded PGlite
+│ (React)       │ cookie │  REST API · web app · migrations │──▶ Open Food Facts (cached)
+└───────────────┘        │                                  │
+┌───────────────┐ Bearer │                                  │
+│ Companion app │───────▶│                                  │
+│ (Expo) +      │ token  └──────────────────────────────────┘
+│ offline queue │
 └───────────────┘
 ```
 
 ### Tech stack
 
-TypeScript everywhere, in a single npm-workspaces monorepo:
+The whole project is TypeScript, in one npm-workspaces monorepo:
 
-| Part          | Technology                                                                               |
-| ------------- | ---------------------------------------------------------------------------------------- |
-| Server        | Node.js, [Hono](https://hono.dev/), [Drizzle ORM](https://orm.drizzle.team/), PostgreSQL |
-| Web app       | React, Vite, TanStack Router and Query                                                   |
-| Companion app | [Expo](https://expo.dev/) (React Native), SQLite for offline storage                     |
-| Shared        | Zod schemas, domain logic and design tokens used by all three                            |
-| Tests         | Vitest                                                                                   |
+| Part            | Technology                                                                                                               |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Server          | Node.js, [Hono](https://hono.dev/), [Drizzle ORM](https://orm.drizzle.team/), PostgreSQL or PGlite                       |
+| Web app         | React 19, Vite, TanStack Router and Query, hand-drawn SVG charts                                                         |
+| Companion app   | [Expo](https://expo.dev/) (React Native), expo-router, expo-camera, SQLite key-value storage                             |
+| Shared packages | `schema` (Zod API contract), `core` (domain logic), `client` (typed API client and offline outbox), `ui` (design tokens) |
+| Tests           | Vitest, with an in-memory database and an in-memory fake API for the web app                                             |
 
 ## Roadmap
 
-- [ ] **Phase 0: Foundations.** Monorepo, auth, households, Docker images, pairing the app by QR code, sync protocol, app layout with the side menu
-- [ ] **Phase 1: Activities.** Presets and custom activities, the strength workout logger, manual sessions
-- [ ] **Phase 2: Nutrition.** Food database, barcode scanning, diary, macro ring, water, weigh-ins
-- [ ] **Phase 3: Kitchen.** Recipe book, URL import, recipe scheduler with rotations and meal-prep cycles
-- [ ] **Phase 4: Shopping.** The shopping list worked out from schedule, purchases and diary, plus the shopping forecast
-- [ ] **Phase 5: Statistics.** Metric registry, widgets, customizable dashboard
-- [ ] **Phase 6: Integrations.** Health Connect / HealthKit, Strava, file imports, theCrag, more connectors
+**1.0 (this release):** everything described above.
+
+**Next:**
+
+- [ ] Integrations: Health Connect / Apple Health (weight, workouts, Slopes ski days), Strava, GPX/FIT/CSV import, theCrag. Kilter is still being researched.
+- [ ] Logging sport sessions and editing recipes on the phone
+- [ ] Profile pictures, per-user dashboards shared with the household
+- [ ] App store releases of the companion app
+- [ ] Bloodwork and other body markers, next to weight in Nutrition
 
 ## Contributing
 
-The project is in early development. Ideas and feedback are welcome through issues. See [CONTRIBUTING.md](CONTRIBUTING.md) for the branching model, commit conventions and repository layout.
+Ideas and feedback are welcome through issues. See [CONTRIBUTING.md](CONTRIBUTING.md) for the branching model, commit conventions, repository layout and development commands. The [CHANGELOG](CHANGELOG.md) lists what changed in each release.
 
 ## Inspiration and credits
 
-VigorTally takes ideas from apps it admires: set-based workout loggers, calorie trackers, and [Mealie](https://github.com/mealie-recipes/mealie) for recipes, meal planning and shopping lists. VigorTally is an independent project and is not affiliated with any of them, or with any of the integration services named above.
+VigorTally takes ideas from apps it admires: set-based workout loggers, calorie trackers, and [Mealie](https://github.com/mealie-recipes/mealie) for recipes and meal planning. VigorTally is an independent project and is not affiliated with any of them, or with any service named above.
 
-Planned data sources:
+Data sources:
 
 - [Open Food Facts](https://world.openfoodfacts.org/): food and barcode data (ODbL)
-- [USDA FoodData Central](https://fdc.nal.usda.gov/): generic food nutrient data (public domain)
-- [wger](https://wger.de/): exercise data (CC-BY-SA)
+- The built-in exercise library and activity presets are VigorTally's own.
 
 ## License
 
