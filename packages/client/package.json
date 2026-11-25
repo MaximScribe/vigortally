@@ -1,6 +1,6 @@
 {
   "name": "@vigortally/client",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Typed HTTP client for the VigorTally API, used by the web and companion apps",
   "license": "MIT",
