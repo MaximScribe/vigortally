@@ -1,3 +1,4 @@
+import { newWorkoutExercise } from '@vigortally/core';
 import { formatDuration } from '@vigortally/core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Navigate, useNavigate } from '@tanstack/react-router';
@@ -10,7 +11,6 @@ import { useNow } from '../hooks/useNow';
 import {
   completedWorkout,
   discardWorkout,
-  emptySet,
   updateWorkout,
   useActiveWorkout,
   type ActiveWorkout,
@@ -148,15 +148,7 @@ function Logger({ workout }: { workout: ActiveWorkout }) {
         onAdd={(ids) =>
           updateWorkout((w) => ({
             ...w,
-            exercises: [
-              ...w.exercises,
-              ...ids.map((exerciseId) => ({
-                exerciseId,
-                supersetGroup: null,
-                note: '',
-                sets: [emptySet(), emptySet(), emptySet()],
-              })),
-            ],
+            exercises: [...w.exercises, ...ids.map(newWorkoutExercise)],
           }))
         }
       />

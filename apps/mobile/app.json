@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "VigorTally",
+    "slug": "vigortally",
+    "version": "0.1.0",
+    "scheme": "vigortally",
+    "orientation": "default",
+    "userInterfaceStyle": "automatic",
+    "backgroundColor": "#20262d",
+    "ios": {
+      "bundleIdentifier": "app.vigortally.companion",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "app.vigortally.companion",
+      "edgeToEdgeEnabled": true
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-sqlite",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "VigorTally uses the camera to scan the pairing QR code and food barcodes."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": false
+    }
+  }
+}

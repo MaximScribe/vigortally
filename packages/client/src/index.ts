@@ -46,7 +46,14 @@ import type {
 } from '@vigortally/schema';
 import { createRequester, type HttpOptions } from './http';
 
-export { ApiRequestError, type HttpOptions } from './http';
+export { ApiRequestError, type HttpMethod, type HttpOptions, type Requester } from './http';
+export {
+  Outbox,
+  type FlushResult,
+  type OutboxStorage,
+  type QueuedWrite,
+  type WriteSender,
+} from './outbox';
 
 export interface ServerInfo {
   name: string;

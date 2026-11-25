@@ -1,3 +1,4 @@
+import { newWorkoutExercise } from '@vigortally/core';
 import type { WorkoutExercise } from '@vigortally/schema';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams } from '@tanstack/react-router';
@@ -7,7 +8,6 @@ import { useMe } from '../auth/AuthGate';
 import { Button, ErrorMessage, TextField } from '../components/forms';
 import { EmptyState, Page } from '../components/Page';
 import { newId } from '../lib/ids';
-import { emptySet } from './activeWorkout';
 import { ExerciseBlock } from './ExerciseBlock';
 import { ExercisePicker, useExercises } from './ExercisePicker';
 import './workout.css';
@@ -131,15 +131,7 @@ function Editor({ initial, isNew }: { initial: Draft; isNew: boolean }) {
         onAdd={(ids) =>
           setDraft((d) => ({
             ...d,
-            exercises: [
-              ...d.exercises,
-              ...ids.map((exerciseId) => ({
-                exerciseId,
-                supersetGroup: null,
-                note: '',
-                sets: [emptySet(), emptySet(), emptySet()],
-              })),
-            ],
+            exercises: [...d.exercises, ...ids.map(newWorkoutExercise)],
           }))
         }
       />
