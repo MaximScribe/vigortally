@@ -4,6 +4,24 @@ All notable changes to VigorTally are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+
+- **Docker Compose:**
+  - The built-in database now lives in a named volume instead of `./data`. On Linux, Docker created that folder owned by root, so the server couldn't write to it.
+  - Compose always builds the image locally and never tries to pull it from a registry.
+  - Moving from 1.0.0: if you already have data in `docker/data`, copy it into the new volume before starting:
+
+    ```bash
+    docker run --rm -v vigortally_vigortally-data:/data -v "$PWD/data":/old alpine sh -c 'cp -a /old/. /data/ && chown -R 1000:1000 /data'
+    ```
+
+### Added
+
+- A `docker/.env.example` for `PUBLIC_URL`, the host port, the time zone and the Postgres password.
+- A step-by-step Docker Compose guide in the README, with update and backup commands.
+
 ## [1.0.0] - 2026-11-25
 
 The first release.

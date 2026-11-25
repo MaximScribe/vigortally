@@ -1,23 +1,31 @@
 # VigorTally, simplest setup: one container with the built-in database.
-# Everything is stored in ./data next to this file.
 #
-#   docker compose up -d
+#   docker compose up -d --build
 #
 # Then open http://<your-server>:8080 and create the admin account.
+# Settings can go in a .env file next to this one (see .env.example).
+
+name: vigortally
 
 services:
   vigortally:
     image: vigortally/vigortally:latest
+    # The image is built from this repository, never pulled from a registry.
     build:
       context: ..
+    pull_policy: build
     container_name: vigortally
     restart: unless-stopped
     ports:
-      - '8080:8080'
+      - '${VIGORTALLY_PORT:-8080}:8080'
     environment:
       # The address your devices use, e.g. https://vigortally.your-tailnet.ts.net
       # (used in the companion app's pairing QR code).
-      PUBLIC_URL: ''
-      TZ: Europe/Berlin
+      PUBLIC_URL: ${PUBLIC_URL:-}
+      TZ: ${TZ:-UTC}
     volumes:
-      - ./data:/data
+      - vigortally-data:/data
+
+volumes:
+  # A named volume, so the container's user owns it on every host.
+  vigortally-data:
